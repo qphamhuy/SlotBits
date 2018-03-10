@@ -1,0 +1,22 @@
+Screens:
+    1. Main screen
+      List of habits
+      + button to add a new habit
+
+    2. New habit
+      Name
+      Slot length
+
+    3. Habit view - idle
+      Trend - bar graph with number of completed slots
+        Date range selection
+      Start timer for a new slot - notify when done
+
+    4. Habit view - in progress
+      Timer
+        Stop button - confirm & back to idle
+        Reset button - restart timer
+
+Data:
+    Habits: id - name - slot_length
+    History: date - habit_id - slot_count

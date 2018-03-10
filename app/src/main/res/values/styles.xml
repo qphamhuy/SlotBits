@@ -1,0 +1,64 @@
+<resources xmlns:card_view="http://schemas.android.com/apk/res-auto">
+
+    <!-- Base application theme. -->
+    <!--<style name="SlotBitsTheme" parent="android:Theme.Material.Light.DarkActionBar">-->
+    <style name="SlotBitsTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:colorPrimary">@color/colorPrimary</item>
+        <item name="android:colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="android:textColorPrimary">@color/textColorPrimary</item>
+    </style>
+
+    <style name="SlotBitsTheme.Toolbar" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
+        <item name="android:background">@color/colorPrimary</item>
+    </style>
+
+    <style name="SlotBitsTheme.Toolbar.Subtitle" parent="@style/TextAppearance.Widget.AppCompat.Toolbar.Subtitle">
+        <item name="android:textSize">@dimen/subtitle_font_size</item>
+    </style>
+
+    <style name="SlotBitsTheme.TitleText">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">@dimen/title_font_size</item>
+        <!--<item name="android:layout_marginBottom">@dimen/medium_margin</item>-->
+    </style>
+    
+    <style name="SlotBitsTheme.SubtleText">
+        <item name="android:textColor">@color/textDisabled</item>
+        <item name="android:textSize">@dimen/subtitle_font_size</item>
+    </style>
+
+    <style name="SlotBitsTheme.TransparentButton">
+        <item name="android:background">@null</item>
+        <item name="android:scaleType">fitXY</item>
+        <item name="android:layout_centerVertical">true</item>
+    </style>
+
+    <style name="SlotBitsTheme.HabitCardView" parent="CardView">
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:elevation">2dp</item>">
+        <item name="cardCornerRadius">4dp</item>
+        <item name="android:layout_marginLeft">@dimen/small_margin</item>
+        <item name="android:layout_marginRight">@dimen/small_margin</item>
+        <item name="android:layout_marginBottom">@dimen/small_margin</item>
+    </style>
+
+    <style name="SlotBitsTheme.HabitCardView.InnerLayout">
+        <item name="android:paddingLeft">@dimen/medium_margin</item>
+        <item name="android:paddingRight">@dimen/medium_margin</item>
+        <item name="android:paddingTop">@dimen/large_margin</item>
+        <item name="android:paddingBottom">@dimen/large_margin</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+    </style>
+
+    <style name="SlotBitsTheme.HabitCardView.Action" parent="SlotBitsTheme.TransparentButton">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:minWidth">0dp</item>
+        <item name="android:minHeight">0dp</item>
+        <item name="android:paddingLeft">@dimen/large_margin</item>
+    </style>
+
+</resources>

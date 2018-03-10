@@ -1,0 +1,22 @@
+<resources>
+    <string name="app_name">SlotBits</string>
+
+    <!-- Titles -->
+    <string name="title_activity_habit_details">HabitDetailsActivity</string>
+    <string name="title_slot_completed_dialog">Success</string>
+    <string name="title_habit_progress_card">In progress</string>
+    <string name="title_habit_history_card">History</string>
+
+    <!-- Labels -->
+    <string name="label_habit_edit_name">Habit\'s name</string>
+    <string name="label_habit_edit_length">Slot length (mins)</string>
+
+    <!-- Buttons -->
+    <string name="button_cancel">Cancel</string>
+    <string name="button_ok">OK</string>
+    <string name="button_dismiss">Dismiss</string>
+
+    <!-- Messages -->
+    <string name="message_habit_delete">Are you sure you want to delete this habit?</string>
+    <string name="message_slot_completed">You just completed a new slot!</string>
+</resources>
