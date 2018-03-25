@@ -4,11 +4,16 @@ import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.Query;
 
+import org.joda.time.DateTime;
+
 @Dao
 public interface SlotDAO {
     @Insert
-    public void createSlot(Slot slot);
+    void createSlot(Slot slot);
 
-    @Query("SELECT * FROM slots WHERE habit_id = :id")
-    public Slot[] getHabitHistory(int id);
+    @Query("SELECT date_completed FROM slots WHERE habit_id = :id")
+    DateTime[] getHabitHistory(int id);
+
+    @Query("DELETE FROM slots WHERE habit_id = :id")
+    void deleteHabitHistory(int id);
 }

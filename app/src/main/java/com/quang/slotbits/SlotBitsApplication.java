@@ -8,6 +8,8 @@ import com.quang.slotbits.common.HabitTimerListener;
 import com.quang.slotbits.common.HabitTimer;
 import com.quang.slotbits.db.SlotBitsDatabase;
 
+import net.danlew.android.joda.JodaTimeAndroid;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -24,6 +26,8 @@ public class SlotBitsApplication extends Application {
         _db = Room.databaseBuilder(getApplicationContext(), SlotBitsDatabase.class, "SlotBits")
                 .build();
         HabitTimer.getInstance();
+
+        JodaTimeAndroid.init(this);
     }
 
     public static SlotBitsApplication getInstance() {

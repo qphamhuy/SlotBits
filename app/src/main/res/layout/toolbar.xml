@@ -6,6 +6,6 @@
     android:layout_height="wrap_content"
     android:minHeight="?attr/actionBarSize"
     android:theme="@style/SlotBitsTheme.Toolbar"
-    app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+    app:popupTheme="@style/SlotBitsTheme.Toolbar.Popup"
     app:subtitleTextAppearance="@style/SlotBitsTheme.Toolbar.Subtitle"
     app:title="@string/app_name" />

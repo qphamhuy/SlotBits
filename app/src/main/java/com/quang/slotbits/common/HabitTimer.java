@@ -4,12 +4,14 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.CountDownTimer;
+import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.NotificationManagerCompat;
 
 import com.quang.slotbits.R;
 import com.quang.slotbits.SlotBitsApplication;
 import com.quang.slotbits.db.Slot;
 
-import java.util.Date;
+import org.joda.time.DateTime;
 
 /**
  * Global singleton that handles the countdown timer for a running habit
@@ -47,12 +49,12 @@ public class HabitTimer {
     /**
      * Start a new countdown
      * @param habitId - ID of habit to start countdown for
-     * @param duration - Duration of given habit
+     * @param duration - Duration of given habit, in minutes
      */
     public void startCountdown(int habitId, int duration) {
         stopCountdown();
         _runningHabitId = habitId;
-        _countdownTimer = new HabitCountdown(5 * 1000).start();
+        _countdownTimer = new HabitCountdown(duration * 60 * 1000).start();
     }
 
     /**
@@ -89,6 +91,7 @@ public class HabitTimer {
             SlotBitsApplication app = SlotBitsApplication.getInstance();
             final int tempHabitId = _runningHabitId;
 
+            //Show popup dialog
             AlertDialog dialog = new AlertDialog.Builder(_habitTimerListener.getActivity())
                     .create();
             dialog.setTitle(app.getString(R.string.title_slot_completed_dialog));
@@ -99,19 +102,30 @@ public class HabitTimer {
                     (DialogInterface.OnClickListener) null);
             dialog.show();
 
+            //Show notification
+//            NotificationCompat.Builder notifBuilder =
+//                    new NotificationCompat.Builder(app, app.getString(R.string.app_name))
+//                    .setSmallIcon(R.drawable.icon_focus)
+//                    .setContentTitle("Task completed")
+//                    .setContentText("Hooray!")
+//                    .setPriority(NotificationCompat.PRIORITY_DEFAULT);
+//            NotificationManagerCompat notifManager = NotificationManagerCompat.from(app);
+//            notifManager.notify(0, notifBuilder.build());
+
             new TimerFinishAsyncTask().execute(_runningHabitId);
+
             stopCountdown();
         }
     }
 
     /**
-     * Async task to execute operations on completion of timer
+     * Async task to execute operations on completion of timer (save to db)
      */
     private class TimerFinishAsyncTask extends AsyncTask<Integer, Void, Void> {
         @Override
         public Void doInBackground(final Integer... habitIDs) {
             SlotBitsApplication.getInstance().getDB().slotDAO().createSlot(
-                    new Slot(habitIDs[0], new Date()));
+                    new Slot(habitIDs[0], new DateTime()));
             return null;
         }
 

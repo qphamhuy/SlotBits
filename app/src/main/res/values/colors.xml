@@ -2,6 +2,8 @@
 <resources>
     <color name="colorPrimary">#34785a</color>
     <color name="colorPrimaryDark">#27694c</color>
+    <color name="colorPrimaryLight">#5cc296</color>
     <color name="textColorPrimary">#000</color>
     <color name="textDisabled">#AAAAAA</color>
+    <color name="lightBackground">#dedede</color>
 </resources>

@@ -6,7 +6,6 @@ import android.os.AsyncTask;
 
 import com.quang.slotbits.SlotBitsApplication;
 import com.quang.slotbits.db.Habit;
-import com.quang.slotbits.db.Slot;
 import com.quang.slotbits.db.SlotBitsDatabase;
 
 /**
@@ -81,6 +80,7 @@ public class HabitDetailsViewModel extends ViewModel {
         @Override
         public Void doInBackground(final Habit... habits) {
             _db.habitDAO().deleteHabit(habits[0]);
+            _db.slotDAO().deleteHabitHistory(habits[0].id);
             _habit.postValue(null);
             return null;
         }
@@ -120,7 +120,8 @@ public class HabitDetailsViewModel extends ViewModel {
 
         @Override
         public Void doInBackground(final Integer... habitIds) {
-            _habitHistory.postValue(new HabitHistory(_db.slotDAO().getHabitHistory(habitIds[0])));
+            _habitHistory.postValue(
+                    new HabitHistory(habitIds[0], _db.slotDAO().getHabitHistory(habitIds[0])));
             return null;
         }
     }

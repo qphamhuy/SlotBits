@@ -4,7 +4,7 @@ import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
 import android.support.annotation.NonNull;
 
-import java.util.Date;
+import org.joda.time.DateTime;
 
 @Entity(tableName = "slots", primaryKeys = {"habit_id", "date_completed"})
 public class Slot {
@@ -12,9 +12,9 @@ public class Slot {
     private int _habitId;
     @ColumnInfo(name = "date_completed")
     @NonNull
-    private Date _dateCompleted;
+    private DateTime _dateCompleted;
 
-    public Slot(int habitId, Date dateCompleted) {
+    public Slot(int habitId, DateTime dateCompleted) {
         _habitId = habitId;
         _dateCompleted = dateCompleted;
     }
@@ -23,7 +23,7 @@ public class Slot {
         return _habitId;
     }
 
-    public Date getDateCompleted() {
+    public DateTime getDateCompleted() {
         return _dateCompleted;
     }
 }

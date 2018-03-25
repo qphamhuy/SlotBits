@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.DialogFragment;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -15,18 +16,35 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
+import com.github.mikephil.charting.charts.BarChart;
+import com.github.mikephil.charting.components.AxisBase;
+import com.github.mikephil.charting.components.MarkerView;
+import com.github.mikephil.charting.components.XAxis;
+import com.github.mikephil.charting.components.YAxis;
+import com.github.mikephil.charting.data.BarData;
+import com.github.mikephil.charting.data.BarDataSet;
+import com.github.mikephil.charting.data.BarEntry;
+import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.formatter.IAxisValueFormatter;
+import com.github.mikephil.charting.formatter.IValueFormatter;
+import com.github.mikephil.charting.highlight.Highlight;
+import com.github.mikephil.charting.utils.MPPointF;
+import com.github.mikephil.charting.utils.ViewPortHandler;
 import com.quang.slotbits.common.HabitTimer;
 import com.quang.slotbits.common.HabitTimerListener;
 import com.quang.slotbits.R;
 import com.quang.slotbits.common.HabitEditDialogFragment;
 import com.quang.slotbits.db.Habit;
-import com.quang.slotbits.db.Slot;
 import com.quang.slotbits.habitlist.HabitListActivity;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
+import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Activity showing details of a single habit
@@ -35,9 +53,15 @@ public class HabitDetailsActivity extends AppCompatActivity
         implements HabitEditDialogFragment.HabitEditDialogListener,
         HabitDeleteDialogFragment.HabitDeleteDialogListener,
         HabitTimerListener {
+
     private HabitTimer _habitTimer;
     private Habit _selectedHabit;
     private HabitDetailsViewModel _viewModel;
+    private BarChart _historyChart;
+    private String _inProgressText;
+    private String _waitingText;
+    private int _disabledTextColor;
+    private int _primaryTextColor;
 
     /**
      * Callback for when activity is created
@@ -58,6 +82,28 @@ public class HabitDetailsActivity extends AppCompatActivity
 
         setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        _inProgressText = getResources().getString(R.string.text_habit_status_inprogress);
+        _waitingText = getResources().getString(R.string.text_habit_status_waiting);
+        _disabledTextColor = getResources().getColor(R.color.textDisabled);
+        _primaryTextColor = getResources().getColor(R.color.textColorPrimary);
+
+        _updateViewsToWaiting();
+
+        //Initialize chart view to display habit history
+        _historyChart = findViewById(R.id.habit_history_chart);
+        _historyChart.getDescription().setEnabled(false);
+        _historyChart.getLegend().setEnabled(false);
+        _historyChart.setDrawValueAboveBar(true);
+        _historyChart.setScaleYEnabled(false);
+        _historyChart.setDoubleTapToZoomEnabled(false);
+        _historyChart.getAxisLeft().setGranularity(1f);
+        _historyChart.getAxisRight().setGranularity(1f);
+
+        XAxis xAxis = _historyChart.getXAxis();
+        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
+        xAxis.setDrawGridLines(false);
+        xAxis.setGranularity(1f); // only intervals of 1 day
     }
 
     /**
@@ -68,7 +114,7 @@ public class HabitDetailsActivity extends AppCompatActivity
         super.onResume();
         if (_selectedHabit.id == _habitTimer.getRunningHabitId()) {
             _habitTimer.subscribeListener(this);
-            this.findViewById(R.id.habit_progress_card).setVisibility(View.VISIBLE);
+//            this.findViewById(R.id.habit_progress_card).setVisibility(View.VISIBLE);
         }
     }
 
@@ -92,13 +138,13 @@ public class HabitDetailsActivity extends AppCompatActivity
     @Override
     public boolean onOptionsItemSelected(MenuItem menuItem) {
         switch (menuItem.getItemId()) {
-            case R.id.habit_start_button:
-                if (_selectedHabit.id != _habitTimer.getRunningHabitId()) {
-                    _habitTimer.startCountdown(_selectedHabit.id, _selectedHabit.getSlotLength());
-                    _habitTimer.subscribeListener(this);
-                    this.findViewById(R.id.habit_progress_card).setVisibility(View.VISIBLE);
-                }
-                break;
+//            case R.id.habit_start_button:
+//                if (_selectedHabit.id != _habitTimer.getRunningHabitId()) {
+//                    _habitTimer.startCountdown(_selectedHabit.id, _selectedHabit.getSlotLength());
+//                    _habitTimer.subscribeListener(this);
+//                    this.findViewById(R.id.habit_status_card).setVisibility(View.VISIBLE);
+//                }
+//                break;
             case R.id.habit_edit_button:
                 DialogFragment editDialog = HabitEditDialogFragment.newInstance(_selectedHabit);
                 editDialog.show(getFragmentManager(), "HabitEditDialogFragment");
@@ -152,8 +198,8 @@ public class HabitDetailsActivity extends AppCompatActivity
      */
     @Override
     public void onTimerFinish() {
-        findViewById(R.id.habit_progress_card).setVisibility(View.GONE);
         _viewModel.updateHabitHistory();
+        _updateViewsToWaiting();
     }
 
     /**
@@ -166,17 +212,85 @@ public class HabitDetailsActivity extends AppCompatActivity
     }
 
     /**
+     * Callback for the click to start the habit countdown
+     * @param view - Button view
+     */
+    public void onStartButtonClick(View view) {
+        if (_selectedHabit.id != _habitTimer.getRunningHabitId()) {
+            _habitTimer.startCountdown(_selectedHabit.id, _selectedHabit.getSlotLength());
+            _habitTimer.subscribeListener(this);
+
+            findViewById(R.id.habit_status_progress).setVisibility(View.VISIBLE);
+            ((Button) findViewById(R.id.habit_details_start)).setTextColor(_disabledTextColor);
+            ((Button) findViewById(R.id.habit_details_stop)).setTextColor(_primaryTextColor);
+            //Get time of completion to display in the status text
+            DateTime completionTime = (new DateTime()).plusMinutes(_selectedHabit.getSlotLength());
+            String statusText = _inProgressText + " " + completionTime.toString("hh:mmaa");
+            ((TextView)findViewById(R.id.habit_status_text)).setText(statusText);
+        }
+    }
+    /**
      * Callback for the click to stop the habit countdown
      * @param view - Button view
      */
     public void onStopButtonClick(View view) {
         _habitTimer.stopCountdown();
-        this.findViewById(R.id.habit_progress_card).setVisibility(View.GONE);
+        _updateViewsToWaiting();
     }
 
 
     //////////
 
+
+    private static final float MIN_X_RANGE = 3f;    /** Min scale that the history chart can be zoomed in to on the X-axis */
+    private static final float MAX_X_RANGE = 20f;   /** Max scale that the history chart can be zoomed out to on the X-axis */
+    private static final float MIN_Y_RANGE = 5f;    /** Min number of units that the Y-axis must have */
+
+    private void _updateViewsToWaiting() {
+        findViewById(R.id.habit_status_progress).setVisibility(View.INVISIBLE);
+        ((TextView) findViewById(R.id.habit_status_text)).setText(_waitingText);
+        ((Button) findViewById(R.id.habit_details_start)).setTextColor(_primaryTextColor);
+        ((Button) findViewById(R.id.habit_details_stop)).setTextColor(_disabledTextColor);
+    }
+
+    /**
+     * Update the history chart with new data
+     * @param habitHistory - New history data
+     */
+    private void _updateHistoryChart(HabitHistory habitHistory) {
+        List<HabitHistory.DailyCount> dailyCounts = habitHistory.getDailyCounts();
+        if (dailyCounts.size() == 0)
+            return;
+
+        List<BarEntry> entries = new ArrayList<>();
+        for (int i = 0; i < dailyCounts.size(); ++i) {
+            entries.add(new BarEntry(i, dailyCounts.get(i).count));
+        }
+        BarDataSet dataSet = new BarDataSet(entries, "");
+        dataSet.setColor(getResources().getColor(R.color.colorPrimaryLight));
+        dataSet.setValueFormatter(new HistoryValueFormatter());
+        BarData data = new BarData(dataSet);
+        data.setBarWidth(0.9f);
+
+        _historyChart.setData(data);
+        HistoryXAxisFormatter xAxisFormatter = new HistoryXAxisFormatter(dailyCounts.get(0).date);
+        _historyChart.getXAxis().setValueFormatter(xAxisFormatter);
+        _historyChart.setVisibleXRangeMinimum(MIN_X_RANGE);
+        _historyChart.setVisibleXRangeMaximum(MAX_X_RANGE);
+        _historyChart.setVisibleYRangeMinimum(MIN_Y_RANGE, YAxis.AxisDependency.LEFT);
+
+        // Zoom in on the x-axis so that there are 5 bars displayed
+        _historyChart.fitScreen();
+        float xScale = (float)(entries.size() < MAX_X_RANGE ? entries.size() : MAX_X_RANGE)/5;
+        _historyChart.zoom(xScale,1, 0, 0);
+        _historyChart.moveViewToX(entries.size() - 5);
+        _historyChart.invalidate();
+
+        //Set custom marker view
+        HistoryMarkerView markerView = new HistoryMarkerView(this, xAxisFormatter);
+        markerView.setChartView(_historyChart);
+        _historyChart.setMarker(markerView);
+    }
 
     /**
      * Observer for the selected habit
@@ -199,20 +313,76 @@ public class HabitDetailsActivity extends AppCompatActivity
     }
 
     /**
-     * Observer for the habit history
+     * Observer of the habit history to update the history chart
      */
     private class HabitHistoryObserver implements Observer<HabitHistory> {
         @Override
         public void onChanged(@Nullable HabitHistory habitHistory) {
             TextView historyText = HabitDetailsActivity.this.findViewById(R.id.habit_history_text);
-            String s = "";
-            s += String.format("Total number of slots of completed: %d", habitHistory.getNumOfSlots());
-            s += "\nLast slot completed on ";
-            s += (new SimpleDateFormat("MM/dd/yy HH:mm")).format(habitHistory.getLastCompleted());
+            String s = String.format(getResources().getString(R.string.text_habit_history_total_count) + " %d", habitHistory.getTotalCount());
+//            s += String.format(getResources().getString(R.string.label_habit_history_last_completed) + "%d", habitHistory.getTotalCount());
             historyText.setText(s);
+            _updateHistoryChart(habitHistory);
 
             HabitDetailsActivity.this.onResume();
         }
-    };
+    }
 
+    /**
+     * Formatter for labels on the X-axis of the history chart
+     */
+    private class HistoryXAxisFormatter implements IAxisValueFormatter {
+        LocalDate _firstDate;
+
+        HistoryXAxisFormatter(LocalDate firstDate) {
+            _firstDate = firstDate;
+        }
+
+        @Override
+        public String getFormattedValue(float value, AxisBase axis) {
+            LocalDate currDate = _firstDate.plusDays((int) value);
+            return currDate.toString("MM/dd");
+        }
+
+        public String getFullDate(float value) {
+            LocalDate currDate = _firstDate.plusDays((int) value);
+            return currDate.toString("MMM dd yyyy");
+        }
+    }
+
+    /**
+     * Formatter for values displayed on top of bars in the history chart
+     */
+    private class HistoryValueFormatter implements IValueFormatter {
+        @Override
+        public String getFormattedValue(float value, Entry entry, int dataSetIndex, ViewPortHandler viewPortHandler) {
+            return Integer.toString((int) value);
+        }
+    }
+
+    /**
+     * Custom marker view which is displayed when a value is highlighted
+     */
+    private class HistoryMarkerView extends MarkerView {
+        private HistoryXAxisFormatter _xAxisFormatter;
+        private TextView _markerViewTextView;
+
+        HistoryMarkerView(Context context, HistoryXAxisFormatter xAxisFormatter) {
+            super(context, R.layout.habit_history_chart_marker_view);
+            _xAxisFormatter = xAxisFormatter;
+            _markerViewTextView = findViewById(R.id.habit_history_marker_view_text);
+        }
+
+        @Override
+        public void refreshContent(Entry e, Highlight highlight) {
+            _markerViewTextView.setText(_xAxisFormatter.getFullDate(e.getX()));
+            super.refreshContent(e, highlight);
+        }
+
+        @Override
+        public MPPointF getOffset() {
+            return new MPPointF(-(getWidth() / 2), 0);//-getHeight());
+        }
+
+    }
 }
