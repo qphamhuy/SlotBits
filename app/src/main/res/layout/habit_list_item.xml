@@ -45,7 +45,7 @@
 
     <ImageButton
         android:id="@+id/habit_button"
-        style="@style/SlotBitsTheme.TransparentButton"
+        style="@style/TimeSlotsTheme.TransparentButton"
         android:layout_width="36dp"
         android:layout_height="36dp"
         android:layout_alignParentEnd="true"

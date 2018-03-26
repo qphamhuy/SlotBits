@@ -1,15 +1,13 @@
-package com.quang.slotbits.common;
+package com.quang.timeslots.common;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.CountDownTimer;
-import android.support.v4.app.NotificationCompat;
-import android.support.v4.app.NotificationManagerCompat;
 
-import com.quang.slotbits.R;
-import com.quang.slotbits.SlotBitsApplication;
-import com.quang.slotbits.db.Slot;
+import com.quang.timeslots.R;
+import com.quang.timeslots.TimeSlotsApplication;
+import com.quang.timeslots.db.Slot;
 
 import org.joda.time.DateTime;
 
@@ -88,7 +86,7 @@ public class HabitTimer {
 
         @Override
         public void onFinish() {
-            SlotBitsApplication app = SlotBitsApplication.getInstance();
+            TimeSlotsApplication app = TimeSlotsApplication.getInstance();
             final int tempHabitId = _runningHabitId;
 
             //Show popup dialog
@@ -124,7 +122,7 @@ public class HabitTimer {
     private class TimerFinishAsyncTask extends AsyncTask<Integer, Void, Void> {
         @Override
         public Void doInBackground(final Integer... habitIDs) {
-            SlotBitsApplication.getInstance().getDB().slotDAO().createSlot(
+            TimeSlotsApplication.getInstance().getDB().slotDAO().createSlot(
                     new Slot(habitIDs[0], new DateTime()));
             return null;
         }

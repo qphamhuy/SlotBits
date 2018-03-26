@@ -1,4 +1,4 @@
-package com.quang.slotbits.common;
+package com.quang.timeslots.common;
 
 import android.app.Activity;
 

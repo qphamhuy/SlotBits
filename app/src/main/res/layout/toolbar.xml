@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:minHeight="?attr/actionBarSize"
-    android:theme="@style/SlotBitsTheme.Toolbar"
-    app:popupTheme="@style/SlotBitsTheme.Toolbar.Popup"
-    app:subtitleTextAppearance="@style/SlotBitsTheme.Toolbar.Subtitle"
+    android:theme="@style/TimeSlotsTheme.Toolbar"
+    app:popupTheme="@style/TimeSlotsTheme.Toolbar.Popup"
+    app:subtitleTextAppearance="@style/TimeSlotsTheme.Toolbar.Subtitle"
     app:title="@string/app_name" />

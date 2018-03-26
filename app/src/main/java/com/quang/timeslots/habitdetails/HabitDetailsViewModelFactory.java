@@ -1,9 +1,8 @@
-package com.quang.slotbits.habitdetails;
+package com.quang.timeslots.habitdetails;
 
 import android.arch.lifecycle.ViewModelProvider;
 
-import com.quang.slotbits.db.Habit;
-import com.quang.slotbits.habitlist.HabitListViewModel;
+import com.quang.timeslots.db.Habit;
 
 public class HabitDetailsViewModelFactory implements ViewModelProvider.Factory {
     private final Habit _habit;

@@ -1,12 +1,12 @@
-package com.quang.slotbits.habitlist;
+package com.quang.timeslots.habitlist;
 
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.ViewModel;
 import android.os.AsyncTask;
 
-import com.quang.slotbits.SlotBitsApplication;
-import com.quang.slotbits.db.Habit;
-import com.quang.slotbits.db.SlotBitsDatabase;
+import com.quang.timeslots.TimeSlotsApplication;
+import com.quang.timeslots.db.Habit;
+import com.quang.timeslots.db.TimeSlotsDatabase;
 
 import java.util.List;
 
@@ -15,13 +15,13 @@ import java.util.List;
  */
 public class HabitListViewModel extends ViewModel {
     private LiveData<List<Habit>> _habitList;
-    private SlotBitsDatabase _db;
+    private TimeSlotsDatabase _db;
 
     /**
      * Constructor
      */
     public HabitListViewModel() {
-        _db = SlotBitsApplication.getInstance().getDB();
+        _db = TimeSlotsApplication.getInstance().getDB();
         _habitList = _db.habitDAO().getAllHabits();
     }
 
@@ -49,9 +49,9 @@ public class HabitListViewModel extends ViewModel {
      * AsyncTask to add a new Habit to the list
      */
     private static class AddAsyncTask extends AsyncTask<Habit, Void, Void> {
-        SlotBitsDatabase _db;
+        TimeSlotsDatabase _db;
 
-        AddAsyncTask(SlotBitsDatabase db) {
+        AddAsyncTask(TimeSlotsDatabase db) {
             _db = db;
         }
         @Override

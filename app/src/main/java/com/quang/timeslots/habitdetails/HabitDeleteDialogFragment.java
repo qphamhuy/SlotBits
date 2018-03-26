@@ -1,4 +1,4 @@
-package com.quang.slotbits.habitdetails;
+package com.quang.timeslots.habitdetails;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -8,7 +8,7 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 
-import com.quang.slotbits.R;
+import com.quang.timeslots.R;
 
 public class HabitDeleteDialogFragment extends DialogFragment {
     public interface HabitDeleteDialogListener {

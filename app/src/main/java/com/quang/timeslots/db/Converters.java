@@ -1,4 +1,4 @@
-package com.quang.slotbits.db;
+package com.quang.timeslots.db;
 
 import android.arch.persistence.room.TypeConverter;
 

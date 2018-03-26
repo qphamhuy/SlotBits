@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">SlotBits</string>
+    <string name="app_name">TimeSlots</string>
 
     <!-- Titles -->
     <string name="title_activity_habit_details">HabitDetailsActivity</string>

@@ -1,12 +1,12 @@
-package com.quang.slotbits.habitdetails;
+package com.quang.timeslots.habitdetails;
 
 import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.ViewModel;
 import android.os.AsyncTask;
 
-import com.quang.slotbits.SlotBitsApplication;
-import com.quang.slotbits.db.Habit;
-import com.quang.slotbits.db.SlotBitsDatabase;
+import com.quang.timeslots.TimeSlotsApplication;
+import com.quang.timeslots.db.Habit;
+import com.quang.timeslots.db.TimeSlotsDatabase;
 
 /**
  * View model for HabitDetailsActivity
@@ -14,14 +14,14 @@ import com.quang.slotbits.db.SlotBitsDatabase;
 public class HabitDetailsViewModel extends ViewModel {
     private MutableLiveData<Habit> _habit = new MutableLiveData<>();
     private MutableLiveData<HabitHistory> _habitHistory = new MutableLiveData<>();
-    private SlotBitsDatabase _db;
+    private TimeSlotsDatabase _db;
 
     /**
      * Constructor
      * @param habit - Habit in focus
      */
     public HabitDetailsViewModel(Habit habit) {
-        _db = SlotBitsApplication.getInstance().getDB();
+        _db = TimeSlotsApplication.getInstance().getDB();
         _habit.setValue(habit);
         new UpdateHistoryAsyncTask(_db, _habitHistory).execute(habit.id);
     }
@@ -69,10 +69,10 @@ public class HabitDetailsViewModel extends ViewModel {
      * Async task to delete selected habit
      */
     private static class DeleteHabitAsyncTask extends AsyncTask<Habit, Void, Void> {
-        private SlotBitsDatabase _db;
+        private TimeSlotsDatabase _db;
         private MutableLiveData<Habit> _habit;
 
-        DeleteHabitAsyncTask(SlotBitsDatabase db, MutableLiveData<Habit> habit) {
+        DeleteHabitAsyncTask(TimeSlotsDatabase db, MutableLiveData<Habit> habit) {
             _db = db;
             _habit = habit;
         }
@@ -90,10 +90,10 @@ public class HabitDetailsViewModel extends ViewModel {
      * Async task to update selected habit
      */
     private class UpdateHabitAsyncTask extends AsyncTask<Habit, Void, Void> {
-        private SlotBitsDatabase _db;
+        private TimeSlotsDatabase _db;
         private MutableLiveData<Habit> _habit;
 
-        UpdateHabitAsyncTask(SlotBitsDatabase db, MutableLiveData<Habit> habit) {
+        UpdateHabitAsyncTask(TimeSlotsDatabase db, MutableLiveData<Habit> habit) {
             _db = db;
             _habit = habit;
         }
@@ -110,10 +110,10 @@ public class HabitDetailsViewModel extends ViewModel {
      * Async task to update the history of the selected habit
      */
     private class UpdateHistoryAsyncTask extends AsyncTask<Integer, Void, Void> {
-        private SlotBitsDatabase _db;
+        private TimeSlotsDatabase _db;
         private MutableLiveData<HabitHistory> _habitHistory;
 
-        UpdateHistoryAsyncTask(SlotBitsDatabase db, MutableLiveData<HabitHistory> habitHistory) {
+        UpdateHistoryAsyncTask(TimeSlotsDatabase db, MutableLiveData<HabitHistory> habitHistory) {
             _db = db;
             _habitHistory = habitHistory;
         }

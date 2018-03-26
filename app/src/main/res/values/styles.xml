@@ -1,44 +1,44 @@
 <resources xmlns:card_view="http://schemas.android.com/apk/res-auto">
 
     <!-- Base application theme. -->
-    <!--<style name="SlotBitsTheme" parent="android:Theme.Material.Light.DarkActionBar">-->
-    <style name="SlotBitsTheme" parent="Theme.AppCompat.Light.NoActionBar">
+    <!--<style name="TimeSlotsTheme" parent="android:Theme.Material.Light.DarkActionBar">-->
+    <style name="TimeSlotsTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="android:colorPrimary">@color/colorPrimary</item>
         <item name="android:colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="android:textColorPrimary">@color/textColorPrimary</item>
     </style>
 
-    <style name="SlotBitsTheme.Toolbar" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
+    <style name="TimeSlotsTheme.Toolbar" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
         <item name="android:background">@color/colorPrimary</item>
     </style>
 
-    <style name="SlotBitsTheme.Toolbar.Popup" parent="ThemeOverlay.AppCompat.Light">
+    <style name="TimeSlotsTheme.Toolbar.Popup" parent="ThemeOverlay.AppCompat.Light">
         <item name="android:background">#FFF</item>
     </style>
 
-    <style name="SlotBitsTheme.Toolbar.Subtitle" parent="@style/TextAppearance.Widget.AppCompat.Toolbar.Subtitle">
+    <style name="TimeSlotsTheme.Toolbar.Subtitle" parent="@style/TextAppearance.Widget.AppCompat.Toolbar.Subtitle">
         <item name="android:textSize">@dimen/subtitle_font_size</item>
     </style>
 
-    <style name="SlotBitsTheme.TitleText">
+    <style name="TimeSlotsTheme.TitleText">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textSize">@dimen/title_font_size</item>
         <!--<item name="android:layout_marginBottom">@dimen/medium_margin</item>-->
     </style>
     
-    <style name="SlotBitsTheme.SubtleText">
+    <style name="TimeSlotsTheme.SubtleText">
         <item name="android:textColor">@color/textDisabled</item>
         <item name="android:textSize">@dimen/subtitle_font_size</item>
     </style>
 
-    <style name="SlotBitsTheme.TransparentButton">
+    <style name="TimeSlotsTheme.TransparentButton">
         <item name="android:background">@null</item>
         <item name="android:scaleType">fitXY</item>
         <item name="android:layout_centerVertical">true</item>
     </style>
 
-    <style name="SlotBitsTheme.HabitCardView" parent="CardView">
+    <style name="TimeSlotsTheme.HabitCardView" parent="CardView">
         <item name="android:layout_width">fill_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:elevation">2dp</item>">
@@ -48,7 +48,7 @@
         <item name="android:layout_marginBottom">@dimen/small_margin</item>
     </style>
 
-    <style name="SlotBitsTheme.HabitCardView.InnerLayout">
+    <style name="TimeSlotsTheme.HabitCardView.InnerLayout">
         <item name="android:paddingLeft">@dimen/medium_margin</item>
         <item name="android:paddingRight">@dimen/medium_margin</item>
         <item name="android:paddingTop">@dimen/large_margin</item>
@@ -57,7 +57,7 @@
         <item name="android:layout_height">match_parent</item>
     </style>
 
-    <style name="SlotBitsTheme.HabitCardView.Action" parent="SlotBitsTheme.TransparentButton">
+    <style name="TimeSlotsTheme.HabitCardView.Action" parent="TimeSlotsTheme.TransparentButton">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:minWidth">0dp</item>

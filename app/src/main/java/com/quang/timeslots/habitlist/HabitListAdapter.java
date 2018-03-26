@@ -1,4 +1,4 @@
-package com.quang.slotbits.habitlist;
+package com.quang.timeslots.habitlist;
 
 import android.app.Activity;
 import android.content.Context;
@@ -12,10 +12,10 @@ import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.quang.slotbits.common.HabitTimer;
-import com.quang.slotbits.common.HabitTimerListener;
-import com.quang.slotbits.db.Habit;
-import com.quang.slotbits.R;
+import com.quang.timeslots.common.HabitTimer;
+import com.quang.timeslots.common.HabitTimerListener;
+import com.quang.timeslots.db.Habit;
+import com.quang.timeslots.R;
 
 import java.util.ArrayList;
 import java.util.List;

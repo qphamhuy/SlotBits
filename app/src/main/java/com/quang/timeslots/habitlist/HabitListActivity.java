@@ -1,4 +1,4 @@
-package com.quang.slotbits.habitlist;
+package com.quang.timeslots.habitlist;
 
 import android.app.DialogFragment;
 import android.arch.lifecycle.Observer;
@@ -13,10 +13,10 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.support.v7.widget.Toolbar;
 
-import com.quang.slotbits.db.Habit;
-import com.quang.slotbits.habitdetails.HabitDetailsActivity;
-import com.quang.slotbits.R;
-import com.quang.slotbits.common.HabitEditDialogFragment;
+import com.quang.timeslots.db.Habit;
+import com.quang.timeslots.habitdetails.HabitDetailsActivity;
+import com.quang.timeslots.R;
+import com.quang.timeslots.common.HabitEditDialogFragment;
 
 import java.util.ArrayList;
 import java.util.List;

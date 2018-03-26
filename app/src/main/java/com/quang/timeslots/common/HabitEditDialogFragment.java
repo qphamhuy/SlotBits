@@ -1,4 +1,4 @@
-package com.quang.slotbits.common;
+package com.quang.timeslots.common;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -11,8 +11,8 @@ import android.view.View;
 import android.widget.EditText;
 
 import com.gregacucnik.EditableSeekBar;
-import com.quang.slotbits.R;
-import com.quang.slotbits.db.Habit;
+import com.quang.timeslots.R;
+import com.quang.timeslots.db.Habit;
 
 public class HabitEditDialogFragment extends DialogFragment {
     public interface HabitEditDialogListener {

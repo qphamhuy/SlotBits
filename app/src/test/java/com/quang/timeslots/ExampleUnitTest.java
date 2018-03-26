@@ -1,4 +1,4 @@
-package com.quang.slotbits;
+package com.quang.timeslots;
 
 import org.junit.Test;
 

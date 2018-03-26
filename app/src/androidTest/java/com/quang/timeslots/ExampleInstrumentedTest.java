@@ -1,4 +1,4 @@
-package com.quang.slotbits;
+package com.quang.timeslots;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
@@ -21,6 +21,6 @@ public class ExampleInstrumentedTest {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getTargetContext();
 
-        assertEquals("com.quang.slotbits", appContext.getPackageName());
+        assertEquals("com.quang.com.quang.timeslots", appContext.getPackageName());
     }
 }

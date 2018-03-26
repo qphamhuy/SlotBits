@@ -1,13 +1,10 @@
-package com.quang.slotbits.habitdetails;
+package com.quang.timeslots.habitdetails;
 
 import org.joda.time.DateTime;
-import org.joda.time.Days;
 import org.joda.time.LocalDate;
-import org.joda.time.LocalTime;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 /**
  * Restructured array of slots to represent the history of a habit, for easier display in the UI

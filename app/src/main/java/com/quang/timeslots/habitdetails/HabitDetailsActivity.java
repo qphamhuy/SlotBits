@@ -1,4 +1,4 @@
-package com.quang.slotbits.habitdetails;
+package com.quang.timeslots.habitdetails;
 
 import android.app.Activity;
 import android.app.DialogFragment;
@@ -33,12 +33,12 @@ import com.github.mikephil.charting.formatter.IValueFormatter;
 import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.utils.MPPointF;
 import com.github.mikephil.charting.utils.ViewPortHandler;
-import com.quang.slotbits.common.HabitTimer;
-import com.quang.slotbits.common.HabitTimerListener;
-import com.quang.slotbits.R;
-import com.quang.slotbits.common.HabitEditDialogFragment;
-import com.quang.slotbits.db.Habit;
-import com.quang.slotbits.habitlist.HabitListActivity;
+import com.quang.timeslots.common.HabitTimer;
+import com.quang.timeslots.common.HabitTimerListener;
+import com.quang.timeslots.R;
+import com.quang.timeslots.common.HabitEditDialogFragment;
+import com.quang.timeslots.db.Habit;
+import com.quang.timeslots.habitlist.HabitListActivity;
 
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
