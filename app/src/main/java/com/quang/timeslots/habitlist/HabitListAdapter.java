@@ -44,8 +44,6 @@ public class HabitListAdapter extends ArrayAdapter<Habit> implements HabitTimerL
         _habitList = habits;
         _layoutInflater = (LayoutInflater) _context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         _listView = listView;
-
-        HabitTimer.getInstance().subscribeListener(this);
     }
 
     /**
@@ -92,7 +90,7 @@ public class HabitListAdapter extends ArrayAdapter<Habit> implements HabitTimerL
             @Override
             public void onClick(View view) {
                 if (habitTimer.getRunningHabitId() == -1)
-                    habitTimer.startCountdown(habit.id, habit.getSlotLength());
+                    habitTimer.startCountdown(habit, habit.getSlotLength());
                 else
                     habitTimer.stopCountdown();
                 notifyDataSetChanged();

@@ -1,13 +1,23 @@
 package com.quang.timeslots.common;
 
 import android.app.AlertDialog;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.CountDownTimer;
+import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.NotificationManagerCompat;
 
 import com.quang.timeslots.R;
 import com.quang.timeslots.TimeSlotsApplication;
+import com.quang.timeslots.db.Habit;
 import com.quang.timeslots.db.Slot;
+import com.quang.timeslots.habitdetails.HabitDetailsActivity;
 
 import org.joda.time.DateTime;
 
@@ -15,7 +25,7 @@ import org.joda.time.DateTime;
  * Global singleton that handles the countdown timer for a running habit
  */
 public class HabitTimer {
-    private int _runningHabitId = -1;
+    private Habit _runningHabit = null;
     private HabitTimerListener _habitTimerListener;
     private CountDownTimer _countdownTimer;
     private static HabitTimer _instance;
@@ -34,7 +44,7 @@ public class HabitTimer {
      * Get ID of currently running habit
      * @return ID of running habit
      */
-    public int getRunningHabitId() { return _runningHabitId; }
+    public int getRunningHabitId() { return (_runningHabit != null ? _runningHabit.id : -1); }
 
     /**
      * Subscribe a listener that reacts to timer ticks
@@ -46,20 +56,21 @@ public class HabitTimer {
 
     /**
      * Start a new countdown
-     * @param habitId - ID of habit to start countdown for
+     * @param habit - Habit to start countdown for
      * @param duration - Duration of given habit, in minutes
      */
-    public void startCountdown(int habitId, int duration) {
+    public void startCountdown(Habit habit, int duration) {
         stopCountdown();
-        _runningHabitId = habitId;
-        _countdownTimer = new HabitCountdown(duration * 60 * 1000).start();
+        _runningHabit = habit;
+        int seconds = (TimeSlotsApplication.getInstance().isDevMode ? 5 : duration * 60);
+        _countdownTimer = new HabitCountdown(seconds * 1000).start();
     }
 
     /**
      * Stop current countdown
      */
     public void stopCountdown() {
-        _runningHabitId = -1;
+        _runningHabit = null;
         if (_countdownTimer != null) {
             _countdownTimer.cancel();
             _countdownTimer = null;
@@ -69,6 +80,44 @@ public class HabitTimer {
 
     //////////
 
+
+    /**
+     * Show notification when a slot is completed
+     */
+    private void _showNotification() {
+        TimeSlotsApplication app = TimeSlotsApplication.getInstance();
+
+        Intent intent = new Intent(app, HabitDetailsActivity.class);
+        intent.putExtra("selectedHabit", _runningHabit);
+        PendingIntent pendingIntent = PendingIntent.getActivity(app, 0, intent, 0);
+
+        String channelID = app.getResources().getString(R.string.notification_channel_id);
+        String notificationBody = String.format(
+                app.getResources().getString(R.string.notification_body),
+                _runningHabit.getName());
+        NotificationCompat.Builder notificationBuilder =
+                new NotificationCompat.Builder(app, channelID)
+                        .setSmallIcon(R.drawable.icon_focus)
+                        .setContentTitle(
+                                app.getResources().getString(R.string.notification_title))
+                        .setContentText(notificationBody)
+                        .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                        .setContentIntent(pendingIntent)
+                        .setAutoCancel(true)
+                        .setChannelId(channelID);
+        NotificationManager notificationManager =
+                (NotificationManager) app.getSystemService(Context.NOTIFICATION_SERVICE);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel channel = new NotificationChannel(
+                    channelID,
+                    app.getResources().getString(R.string.notification_channel_description),
+                    NotificationManager.IMPORTANCE_DEFAULT);
+            notificationManager.createNotificationChannel(channel);
+        }
+
+        notificationManager.notify(0, notificationBuilder.build());
+    }
 
     /**
      * Custom implementation of CountDownTimer
@@ -87,7 +136,6 @@ public class HabitTimer {
         @Override
         public void onFinish() {
             TimeSlotsApplication app = TimeSlotsApplication.getInstance();
-            final int tempHabitId = _runningHabitId;
 
             //Show popup dialog
             AlertDialog dialog = new AlertDialog.Builder(_habitTimerListener.getActivity())
@@ -100,18 +148,8 @@ public class HabitTimer {
                     (DialogInterface.OnClickListener) null);
             dialog.show();
 
-            //Show notification
-//            NotificationCompat.Builder notifBuilder =
-//                    new NotificationCompat.Builder(app, app.getString(R.string.app_name))
-//                    .setSmallIcon(R.drawable.icon_focus)
-//                    .setContentTitle("Task completed")
-//                    .setContentText("Hooray!")
-//                    .setPriority(NotificationCompat.PRIORITY_DEFAULT);
-//            NotificationManagerCompat notifManager = NotificationManagerCompat.from(app);
-//            notifManager.notify(0, notifBuilder.build());
-
-            new TimerFinishAsyncTask().execute(_runningHabitId);
-
+            _showNotification();
+            new TimerFinishAsyncTask().execute(_runningHabit.id);
             stopCountdown();
         }
     }

@@ -19,7 +19,8 @@
         <activity
             android:name=".habitdetails.HabitDetailsActivity"
             android:label="@string/title_activity_habit_details"
-            android:parentActivityName=".habitlist.HabitListActivity">
+            android:parentActivityName=".habitlist.HabitListActivity"
+            android:launchMode="singleTask">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".habitlist.HabitListActivity" />

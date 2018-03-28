@@ -12,6 +12,8 @@ public class TimeSlotsApplication extends Application {
     private static TimeSlotsApplication _instance;
     private TimeSlotsDatabase _db;
 
+    public boolean isDevMode = false; /** Toggleable dev mode (fixed 5s timer) */
+
     @Override
     public void onCreate() {
         super.onCreate();

@@ -6,6 +6,8 @@ import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NavUtils;
@@ -20,6 +22,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.BarChart;
+import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.AxisBase;
 import com.github.mikephil.charting.components.MarkerView;
 import com.github.mikephil.charting.components.XAxis;
@@ -28,6 +31,8 @@ import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.data.LineData;
+import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.formatter.IAxisValueFormatter;
 import com.github.mikephil.charting.formatter.IValueFormatter;
 import com.github.mikephil.charting.highlight.Highlight;
@@ -54,10 +59,11 @@ public class HabitDetailsActivity extends AppCompatActivity
         HabitDeleteDialogFragment.HabitDeleteDialogListener,
         HabitTimerListener {
 
+    private Resources _resources;
     private HabitTimer _habitTimer;
     private Habit _selectedHabit;
     private HabitDetailsViewModel _viewModel;
-    private BarChart _historyChart;
+    private LineChart _historyChart;
     private String _inProgressText;
     private String _waitingText;
     private int _disabledTextColor;
@@ -71,6 +77,7 @@ public class HabitDetailsActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.habit_details);
+        _resources = getResources();
         _habitTimer = HabitTimer.getInstance();
         _selectedHabit = this.getIntent().getParcelableExtra("selectedHabit");
 
@@ -83,10 +90,10 @@ public class HabitDetailsActivity extends AppCompatActivity
         setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        _inProgressText = getResources().getString(R.string.text_habit_status_inprogress);
-        _waitingText = getResources().getString(R.string.text_habit_status_waiting);
-        _disabledTextColor = getResources().getColor(R.color.textDisabled);
-        _primaryTextColor = getResources().getColor(R.color.textColorPrimary);
+        _inProgressText = _resources.getString(R.string.text_habit_status_inprogress);
+        _waitingText = _resources.getString(R.string.text_habit_status_waiting);
+        _disabledTextColor = _resources.getColor(R.color.textDisabled);
+        _primaryTextColor = _resources.getColor(R.color.textColorPrimary);
 
         _updateViewsToWaiting();
 
@@ -94,7 +101,6 @@ public class HabitDetailsActivity extends AppCompatActivity
         _historyChart = findViewById(R.id.habit_history_chart);
         _historyChart.getDescription().setEnabled(false);
         _historyChart.getLegend().setEnabled(false);
-        _historyChart.setDrawValueAboveBar(true);
         _historyChart.setScaleYEnabled(false);
         _historyChart.setDoubleTapToZoomEnabled(false);
         _historyChart.getAxisLeft().setGranularity(1f);
@@ -138,13 +144,6 @@ public class HabitDetailsActivity extends AppCompatActivity
     @Override
     public boolean onOptionsItemSelected(MenuItem menuItem) {
         switch (menuItem.getItemId()) {
-//            case R.id.habit_start_button:
-//                if (_selectedHabit.id != _habitTimer.getRunningHabitId()) {
-//                    _habitTimer.startCountdown(_selectedHabit.id, _selectedHabit.getSlotLength());
-//                    _habitTimer.subscribeListener(this);
-//                    this.findViewById(R.id.habit_status_card).setVisibility(View.VISIBLE);
-//                }
-//                break;
             case R.id.habit_edit_button:
                 DialogFragment editDialog = HabitEditDialogFragment.newInstance(_selectedHabit);
                 editDialog.show(getFragmentManager(), "HabitEditDialogFragment");
@@ -187,7 +186,7 @@ public class HabitDetailsActivity extends AppCompatActivity
      */
     @Override
     public void timerUpdate(long remainingSecs) {
-        TextView countdownView = (TextView) this.findViewById(R.id.habit_status_remaining_time);
+        TextView countdownView = this.findViewById(R.id.habit_status_remaining_time);
         long mins = remainingSecs / 60;
         long secs = remainingSecs % 60;
         countdownView.setText(String.format("%dm%ds", mins, secs));
@@ -217,7 +216,7 @@ public class HabitDetailsActivity extends AppCompatActivity
      */
     public void onStartButtonClick(View view) {
         if (_selectedHabit.id != _habitTimer.getRunningHabitId()) {
-            _habitTimer.startCountdown(_selectedHabit.id, _selectedHabit.getSlotLength());
+            _habitTimer.startCountdown(_selectedHabit, _selectedHabit.getSlotLength());
             _habitTimer.subscribeListener(this);
 
             findViewById(R.id.habit_status_progress).setVisibility(View.VISIBLE);
@@ -262,15 +261,18 @@ public class HabitDetailsActivity extends AppCompatActivity
         if (dailyCounts.size() == 0)
             return;
 
-        List<BarEntry> entries = new ArrayList<>();
+        List<Entry> entries = new ArrayList<>();
         for (int i = 0; i < dailyCounts.size(); ++i) {
             entries.add(new BarEntry(i, dailyCounts.get(i).count));
         }
-        BarDataSet dataSet = new BarDataSet(entries, "");
-        dataSet.setColor(getResources().getColor(R.color.colorPrimaryLight));
+        LineDataSet dataSet = new LineDataSet(entries, "");
         dataSet.setValueFormatter(new HistoryValueFormatter());
-        BarData data = new BarData(dataSet);
-        data.setBarWidth(0.9f);
+        dataSet.setDrawCircleHole(false);
+        dataSet.setDrawFilled(true);
+        dataSet.setFillColor(_resources.getColor(R.color.lightBackground));
+        dataSet.setColor(_resources.getColor(R.color.lightBackground));
+        dataSet.setCircleColor(_resources.getColor(R.color.colorPrimary));
+        LineData data = new LineData(dataSet);
 
         _historyChart.setData(data);
         HistoryXAxisFormatter xAxisFormatter = new HistoryXAxisFormatter(dailyCounts.get(0).date);
@@ -319,8 +321,7 @@ public class HabitDetailsActivity extends AppCompatActivity
         @Override
         public void onChanged(@Nullable HabitHistory habitHistory) {
             TextView historyText = HabitDetailsActivity.this.findViewById(R.id.habit_history_text);
-            String s = String.format(getResources().getString(R.string.text_habit_history_total_count) + " %d", habitHistory.getTotalCount());
-//            s += String.format(getResources().getString(R.string.label_habit_history_last_completed) + "%d", habitHistory.getTotalCount());
+            String s = String.format(_resources.getString(R.string.text_habit_history_total_count) + " %d", habitHistory.getTotalCount());
             historyText.setText(s);
             _updateHistoryChart(habitHistory);
 
