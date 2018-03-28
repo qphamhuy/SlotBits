@@ -11,7 +11,6 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.CountDownTimer;
 import android.support.v4.app.NotificationCompat;
-import android.support.v4.app.NotificationManagerCompat;
 
 import com.quang.timeslots.R;
 import com.quang.timeslots.TimeSlotsApplication;
@@ -57,12 +56,11 @@ public class HabitTimer {
     /**
      * Start a new countdown
      * @param habit - Habit to start countdown for
-     * @param duration - Duration of given habit, in minutes
      */
-    public void startCountdown(Habit habit, int duration) {
+    public void startCountdown(Habit habit) {
         stopCountdown();
         _runningHabit = habit;
-        int seconds = (TimeSlotsApplication.getInstance().isDevMode ? 5 : duration * 60);
+        int seconds = (TimeSlotsApplication.getInstance().isDevMode ? 5 : habit.getSlotLength() * 60);
         _countdownTimer = new HabitCountdown(seconds * 1000).start();
     }
 
@@ -146,6 +144,15 @@ public class HabitTimer {
                     DialogInterface.BUTTON_NEGATIVE,
                     app.getString(R.string.button_dismiss),
                     (DialogInterface.OnClickListener) null);
+            dialog.setButton(
+                    DialogInterface.BUTTON_POSITIVE,
+                    app.getString(R.string.button_repeat),
+                    new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            _habitTimerListener.onTimerRestart();
+                        }
+                    });
             dialog.show();
 
             _showNotification();

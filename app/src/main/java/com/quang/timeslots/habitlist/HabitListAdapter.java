@@ -12,10 +12,10 @@ import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.quang.timeslots.R;
 import com.quang.timeslots.common.HabitTimer;
 import com.quang.timeslots.common.HabitTimerListener;
 import com.quang.timeslots.db.Habit;
-import com.quang.timeslots.R;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,6 +30,7 @@ public class HabitListAdapter extends ArrayAdapter<Habit> implements HabitTimerL
     private ListView _listView;
     private View _runningHabitView;
     private LayoutInflater _layoutInflater;
+    private View _lastCompletedHabitView;
 
     /**
      * Constructor
@@ -89,10 +90,13 @@ public class HabitListAdapter extends ArrayAdapter<Habit> implements HabitTimerL
         habitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (habitTimer.getRunningHabitId() == -1)
-                    habitTimer.startCountdown(habit, habit.getSlotLength());
-                else
+                if (habitTimer.getRunningHabitId() == -1) {
+                    habitTimer.startCountdown(habit);
+                    _lastCompletedHabitView = null;
+                }
+                else {
                     habitTimer.stopCountdown();
+                }
                 notifyDataSetChanged();
             }
         });
@@ -121,6 +125,7 @@ public class HabitListAdapter extends ArrayAdapter<Habit> implements HabitTimerL
     @Override
     public void onTimerFinish() {
         notifyDataSetChanged();
+        _lastCompletedHabitView = _runningHabitView;
     }
 
     /**
@@ -130,5 +135,13 @@ public class HabitListAdapter extends ArrayAdapter<Habit> implements HabitTimerL
     @Override
     public Activity getActivity() {
         return (Activity) _context;
+    }
+
+    /**
+     * Callback for HabitTimer's request to restart; implementation of HabitTimerListener interface
+     */
+    @Override
+    public void onTimerRestart() {
+        _lastCompletedHabitView.findViewById(R.id.habit_button).callOnClick();
     }
 }

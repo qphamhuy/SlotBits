@@ -1,4 +1,4 @@
-<resources xmlns:card_view="http://schemas.android.com/apk/res-auto">
+<resources>
 
     <!-- Base application theme. -->
     <!--<style name="TimeSlotsTheme" parent="android:Theme.Material.Light.DarkActionBar">-->

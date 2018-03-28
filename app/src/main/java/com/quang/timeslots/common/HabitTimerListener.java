@@ -22,4 +22,9 @@ public interface HabitTimerListener {
      * @return Activity object
      */
     Activity getActivity();
+
+    /**
+     * React to request to restart timer
+     */
+    void onTimerRestart();
 }

@@ -7,23 +7,21 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.support.v7.widget.Toolbar;
 
+import com.quang.timeslots.R;
 import com.quang.timeslots.TimeSlotsApplication;
+import com.quang.timeslots.common.HabitEditDialogFragment;
 import com.quang.timeslots.common.HabitTimer;
 import com.quang.timeslots.db.Habit;
-import com.quang.timeslots.habitdetails.HabitDeleteDialogFragment;
 import com.quang.timeslots.habitdetails.HabitDetailsActivity;
-import com.quang.timeslots.R;
-import com.quang.timeslots.common.HabitEditDialogFragment;
 
 import java.util.ArrayList;
 import java.util.List;

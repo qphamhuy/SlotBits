@@ -7,7 +7,6 @@ import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NavUtils;
@@ -21,14 +20,11 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.AxisBase;
 import com.github.mikephil.charting.components.MarkerView;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
-import com.github.mikephil.charting.data.BarData;
-import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
@@ -38,10 +34,10 @@ import com.github.mikephil.charting.formatter.IValueFormatter;
 import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.utils.MPPointF;
 import com.github.mikephil.charting.utils.ViewPortHandler;
-import com.quang.timeslots.common.HabitTimer;
-import com.quang.timeslots.common.HabitTimerListener;
 import com.quang.timeslots.R;
 import com.quang.timeslots.common.HabitEditDialogFragment;
+import com.quang.timeslots.common.HabitTimer;
+import com.quang.timeslots.common.HabitTimerListener;
 import com.quang.timeslots.db.Habit;
 import com.quang.timeslots.habitlist.HabitListActivity;
 
@@ -95,8 +91,6 @@ public class HabitDetailsActivity extends AppCompatActivity
         _disabledTextColor = _resources.getColor(R.color.textDisabled);
         _primaryTextColor = _resources.getColor(R.color.textColorPrimary);
 
-        _updateViewsToWaiting();
-
         //Initialize chart view to display habit history
         _historyChart = findViewById(R.id.habit_history_chart);
         _historyChart.getDescription().setEnabled(false);
@@ -118,10 +112,9 @@ public class HabitDetailsActivity extends AppCompatActivity
     @Override
     public void onResume() {
         super.onResume();
-        if (_selectedHabit.id == _habitTimer.getRunningHabitId()) {
+        if (_selectedHabit.id == _habitTimer.getRunningHabitId())
             _habitTimer.subscribeListener(this);
-//            this.findViewById(R.id.habit_progress_card).setVisibility(View.VISIBLE);
-        }
+        _updateViewsWithHabitStatus();
     }
 
     /**
@@ -198,7 +191,7 @@ public class HabitDetailsActivity extends AppCompatActivity
     @Override
     public void onTimerFinish() {
         _viewModel.updateHabitHistory();
-        _updateViewsToWaiting();
+        _updateViewsWithHabitStatus();
     }
 
     /**
@@ -211,22 +204,20 @@ public class HabitDetailsActivity extends AppCompatActivity
     }
 
     /**
+     * Callback for HabitTimer's request to restart; implementation of HabitTimerListener interface
+     */
+    @Override
+    public void onTimerRestart() {
+        onStartButtonClick(findViewById(R.id.habit_details_start));
+    }
+
+    /**
      * Callback for the click to start the habit countdown
      * @param view - Button view
      */
     public void onStartButtonClick(View view) {
-        if (_selectedHabit.id != _habitTimer.getRunningHabitId()) {
-            _habitTimer.startCountdown(_selectedHabit, _selectedHabit.getSlotLength());
-            _habitTimer.subscribeListener(this);
-
-            findViewById(R.id.habit_status_progress).setVisibility(View.VISIBLE);
-            ((Button) findViewById(R.id.habit_details_start)).setTextColor(_disabledTextColor);
-            ((Button) findViewById(R.id.habit_details_stop)).setTextColor(_primaryTextColor);
-            //Get time of completion to display in the status text
-            DateTime completionTime = (new DateTime()).plusMinutes(_selectedHabit.getSlotLength());
-            String statusText = _inProgressText + " " + completionTime.toString("hh:mmaa");
-            ((TextView)findViewById(R.id.habit_status_text)).setText(statusText);
-        }
+        _habitTimer.startCountdown(_selectedHabit);
+        HabitDetailsActivity.this.onResume();
     }
     /**
      * Callback for the click to stop the habit countdown
@@ -234,7 +225,7 @@ public class HabitDetailsActivity extends AppCompatActivity
      */
     public void onStopButtonClick(View view) {
         _habitTimer.stopCountdown();
-        _updateViewsToWaiting();
+        _updateViewsWithHabitStatus();
     }
 
 
@@ -245,11 +236,25 @@ public class HabitDetailsActivity extends AppCompatActivity
     private static final float MAX_X_RANGE = 20f;   /** Max scale that the history chart can be zoomed out to on the X-axis */
     private static final float MIN_Y_RANGE = 5f;    /** Min number of units that the Y-axis must have */
 
-    private void _updateViewsToWaiting() {
-        findViewById(R.id.habit_status_progress).setVisibility(View.INVISIBLE);
-        ((TextView) findViewById(R.id.habit_status_text)).setText(_waitingText);
-        ((Button) findViewById(R.id.habit_details_start)).setTextColor(_primaryTextColor);
-        ((Button) findViewById(R.id.habit_details_stop)).setTextColor(_disabledTextColor);
+    /**
+     * Update UI views to reflect current habit's status
+     */
+    private void _updateViewsWithHabitStatus() {
+        if (_selectedHabit.id == _habitTimer.getRunningHabitId()) {
+            findViewById(R.id.habit_status_progress).setVisibility(View.VISIBLE);
+            ((Button) findViewById(R.id.habit_details_start)).setTextColor(_disabledTextColor);
+            ((Button) findViewById(R.id.habit_details_stop)).setTextColor(_primaryTextColor);
+            //Get time of completion to display in the status text
+            DateTime completionTime = (new DateTime()).plusMinutes(_selectedHabit.getSlotLength());
+            String statusText = _inProgressText + " " + completionTime.toString("hh:mmaa");
+            ((TextView)findViewById(R.id.habit_status_text)).setText(statusText);
+        }
+        else {
+            findViewById(R.id.habit_status_progress).setVisibility(View.INVISIBLE);
+            ((Button) findViewById(R.id.habit_details_start)).setTextColor(_primaryTextColor);
+            ((Button) findViewById(R.id.habit_details_stop)).setTextColor(_disabledTextColor);
+            ((TextView) findViewById(R.id.habit_status_text)).setText(_waitingText);
+        }
     }
 
     /**
@@ -267,6 +272,7 @@ public class HabitDetailsActivity extends AppCompatActivity
         }
         LineDataSet dataSet = new LineDataSet(entries, "");
         dataSet.setValueFormatter(new HistoryValueFormatter());
+        dataSet.setValueTextSize(9f);
         dataSet.setDrawCircleHole(false);
         dataSet.setDrawFilled(true);
         dataSet.setFillColor(_resources.getColor(R.color.lightBackground));

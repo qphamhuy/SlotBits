@@ -34,6 +34,7 @@
     <string name="button_stop">STOP</string>
     <string name="button_edit">Edit</string>
     <string name="button_delete">Delete</string>
+    <string name="button_repeat">Go again!</string>
 
     <!-- Messages -->
     <string name="message_habit_delete">Are you sure you want to delete this habit?</string>

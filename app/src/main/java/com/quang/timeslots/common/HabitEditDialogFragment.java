@@ -8,6 +8,7 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.EditText;
 
 import com.gregacucnik.EditableSeekBar;
@@ -38,6 +39,7 @@ public class HabitEditDialogFragment extends DialogFragment {
         final EditableSeekBar slotLengthField = dialogView.findViewById(R.id.habit_slot_length_field);
         final Habit currHabit = getArguments().getParcelable("habit");
         nameField.setText(currHabit.getName());
+        nameField.requestFocus();
         slotLengthField.setValue(currHabit.getSlotLength());
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -50,7 +52,9 @@ public class HabitEditDialogFragment extends DialogFragment {
                                 new Habit(nameField.getText().toString(), slotLengthField.getValue()));
                     }
                 });
-        return builder.create();
+        Dialog dialog = builder.create();
+        dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+        return dialog;
     }
 
     @Override
