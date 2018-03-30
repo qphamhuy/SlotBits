@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:paddingLeft="@dimen/medium_margin"
     android:paddingRight="@dimen/medium_margin"
     android:paddingTop="@dimen/large_margin"
@@ -11,20 +11,20 @@
     <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_toStartOf="@id/habit_countdown"
-        android:layout_alignParentLeft="true">
+        android:layout_toStartOf="@id/habit_list_item_countdown"
+        android:layout_alignParentStart="true">
         <TextView
-            android:id="@+id/habit_name"
+            android:id="@+id/habit_list_item_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="@dimen/regular_font_size"
             android:textColor="#000000" />
 
         <TextView
-            android:id="@+id/habit_details"
+            android:id="@+id/habit_list_item_details"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/habit_name"
+            android:layout_below="@+id/habit_list_item_name"
             android:layout_marginTop="@dimen/tiny_margin"
             android:ellipsize="end"
             android:maxLines="2"
@@ -33,20 +33,21 @@
     </RelativeLayout>
 
     <TextView
-        android:id="@+id/habit_countdown"
+        android:id="@+id/habit_list_item_countdown"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
-        android:layout_toStartOf="@id/habit_button"
+        android:layout_toStartOf="@id/habit_list_item_button"
         android:layout_marginLeft="@dimen/medium_margin"
         android:visibility="invisible"
         android:textSize="@dimen/regular_font_size"/>
 
     <ImageButton
-        android:id="@+id/habit_button"
+        android:id="@+id/habit_list_item_button"
         style="@style/TimeSlotsTheme.TransparentButton"
         android:layout_width="36dp"
         android:layout_height="36dp"
         android:layout_alignParentEnd="true"
         android:src="@drawable/icon_play" />
+
 </RelativeLayout>

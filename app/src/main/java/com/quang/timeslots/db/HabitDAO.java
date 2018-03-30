@@ -14,11 +14,17 @@ public interface HabitDAO {
     @Insert
     public long createHabit(Habit habit);
 
+    @Insert
+    public long[] createHabits(List<Habit> habits);
+
     @Update
     public void updateHabit(Habit habit);
 
     @Delete
     public void deleteHabit(Habit habit);
+
+    @Query("DELETE FROM habits")
+    public void deleteAllHabits();
 
     @Query("SELECT * FROM habits")
     public LiveData<List<Habit>> getAllHabits();
