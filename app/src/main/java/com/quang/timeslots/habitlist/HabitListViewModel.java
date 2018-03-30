@@ -41,6 +41,14 @@ public class HabitListViewModel extends ViewModel {
         new AddAsyncTask(_db).execute(habit);
     }
 
+    /**
+     * Re-order habits like they appear in the input list
+     * @param habitsList - List of habits in the new order
+     */
+    public void reorderHabits(List<Habit> habitsList) {
+        new ReorderHabitsAsyncTask(_db).execute(habitsList);
+    }
+
 
     //////////
 
@@ -54,9 +62,31 @@ public class HabitListViewModel extends ViewModel {
         AddAsyncTask(TimeSlotsDatabase db) {
             _db = db;
         }
+
         @Override
         public Void doInBackground(final Habit... habits) {
+            habits[0].orderNumber = _db.habitDAO().getCountOfHabits();
             _db.habitDAO().createHabit(habits[0]);
+            return null;
+        }
+    }
+
+    /**
+     * AsyncTask to re-order Habits like they appear in the input list
+     */
+    private static class ReorderHabitsAsyncTask extends AsyncTask<List<Habit>, Void, Void> {
+        TimeSlotsDatabase _db;
+
+        ReorderHabitsAsyncTask(TimeSlotsDatabase db) {
+            _db = db;
+        }
+
+        @Override
+        public Void doInBackground(final List<Habit>... habits) {
+            for (int i = 0; i < habits[0].size(); ++i) {
+                habits[0].get(i).orderNumber = i + 1;
+                _db.habitDAO().updateHabit(habits[0].get(i));
+            }
             return null;
         }
     }

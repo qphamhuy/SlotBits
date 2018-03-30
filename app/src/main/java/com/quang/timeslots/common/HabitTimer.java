@@ -139,7 +139,8 @@ public class HabitTimer {
             AlertDialog dialog = new AlertDialog.Builder(_habitTimerListener.getActivity())
                     .create();
             dialog.setTitle(app.getString(R.string.title_slot_completed_dialog));
-            dialog.setMessage(app.getString(R.string.message_slot_completed));
+            dialog.setMessage(
+                    String.format(app.getString(R.string.text_slot_completed), _runningHabit.getName()));
             dialog.setButton(
                     DialogInterface.BUTTON_NEGATIVE,
                     app.getString(R.string.button_dismiss),
