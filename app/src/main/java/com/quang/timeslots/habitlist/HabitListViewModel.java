@@ -65,7 +65,7 @@ public class HabitListViewModel extends ViewModel {
 
         @Override
         public Void doInBackground(final Habit... habits) {
-            habits[0].orderNumber = _db.habitDAO().getCountOfHabits();
+            habits[0].orderNumber = _db.habitDAO().getMaxOrderNumber() + 1;
             _db.habitDAO().createHabit(habits[0]);
             return null;
         }

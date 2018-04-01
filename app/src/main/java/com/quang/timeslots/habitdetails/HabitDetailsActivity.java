@@ -13,6 +13,7 @@ import android.support.v4.app.NavUtils;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.Html;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -307,7 +308,7 @@ public class HabitDetailsActivity extends AppCompatActivity
         @Override
         public void onChanged(@Nullable Habit habit) {
             if (habit == null) {
-                startActivity(new Intent(HabitDetailsActivity.this, HabitListActivity.class));
+                finish();
             }
             else {
                 _selectedHabit = habit;
@@ -327,8 +328,8 @@ public class HabitDetailsActivity extends AppCompatActivity
         @Override
         public void onChanged(@Nullable HabitHistory habitHistory) {
             TextView historyText = HabitDetailsActivity.this.findViewById(R.id.habit_history_text);
-            String s = String.format(_resources.getString(R.string.text_habit_history_total_count) + " %d", habitHistory.getTotalCount());
-            historyText.setText(s);
+            String s = _resources.getString(R.string.text_habit_history_total_count, habitHistory.getTotalCount());
+            historyText.setText(Html.fromHtml(s));
             _updateHistoryChart(habitHistory);
 
             HabitDetailsActivity.this.onResume();

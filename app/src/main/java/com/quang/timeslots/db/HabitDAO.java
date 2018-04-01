@@ -20,8 +20,8 @@ public interface HabitDAO {
     @Delete
     void deleteHabit(Habit habit);
 
-    @Query("SELECT COUNT(*) FROM habits")
-    int getCountOfHabits();
+    @Query("SELECT MAX(order_number) FROM habits")
+    int getMaxOrderNumber();
 
     @Query("SELECT * FROM habits ORDER BY order_number")
     LiveData<List<Habit>> getAllHabits();
