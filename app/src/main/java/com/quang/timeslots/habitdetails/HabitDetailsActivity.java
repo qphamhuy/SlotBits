@@ -13,12 +13,15 @@ import android.support.v4.app.NavUtils;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
 import android.text.Html;
+import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.LineChart;
@@ -40,7 +43,6 @@ import com.quang.timeslots.common.HabitEditDialogFragment;
 import com.quang.timeslots.common.HabitTimer;
 import com.quang.timeslots.common.HabitTimerListener;
 import com.quang.timeslots.db.Habit;
-import com.quang.timeslots.habitlist.HabitListActivity;
 
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
@@ -61,6 +63,9 @@ public class HabitDetailsActivity extends AppCompatActivity
     private Habit _selectedHabit;
     private HabitDetailsViewModel _viewModel;
     private LineChart _historyChart;
+    private TextView _historyLastCompletedTextView;
+    private EditText _historyCountDaysInput;
+    private TextView _historyCountTextView;
     private String _inProgressText;
     private String _waitingText;
     private int _disabledTextColor;
@@ -91,6 +96,14 @@ public class HabitDetailsActivity extends AppCompatActivity
         _waitingText = _resources.getString(R.string.text_habit_status_waiting);
         _disabledTextColor = _resources.getColor(R.color.textDisabled);
         _primaryTextColor = _resources.getColor(R.color.textColorPrimary);
+
+        _historyLastCompletedTextView = findViewById(R.id.habit_history_last_completed);
+
+        //Set up slot count text and input views in the history card
+        _historyCountTextView = findViewById(R.id.habit_history_count);
+        _historyCountDaysInput = findViewById(R.id.habit_history_days_input);
+        _historyCountDaysInput.addTextChangedListener(new HistoryDaysInputWatcher());
+        _historyCountDaysInput.setText("20");
 
         //Initialize chart view to display habit history
         _historyChart = findViewById(R.id.habit_history_chart);
@@ -302,6 +315,22 @@ public class HabitDetailsActivity extends AppCompatActivity
     }
 
     /**
+     * Update slot count text view when history or days input changes
+     * @param habitHistory - Current habit history
+     */
+    private void _updateHistoryCount(HabitHistory habitHistory) {
+        int numDays;
+        try {
+            numDays = Integer.parseInt(_historyCountDaysInput.getText().toString());
+        }
+        catch(Exception e) {
+            numDays = 0;
+        }
+        int count = (habitHistory != null ? habitHistory.getCountInLastNDays(numDays) : 0);
+        _historyCountTextView.setText(Html.fromHtml(getString(R.string.text_habit_history_number_of_slots_2, count)));
+    }
+
+    /**
      * Observer for the selected habit
      */
     private class HabitObserver implements Observer<Habit> {
@@ -327,10 +356,13 @@ public class HabitDetailsActivity extends AppCompatActivity
     private class HabitHistoryObserver implements Observer<HabitHistory> {
         @Override
         public void onChanged(@Nullable HabitHistory habitHistory) {
-            TextView historyText = HabitDetailsActivity.this.findViewById(R.id.habit_history_text);
-            String s = _resources.getString(R.string.text_habit_history_total_count, habitHistory.getTotalCount());
-            historyText.setText(Html.fromHtml(s));
             _updateHistoryChart(habitHistory);
+            _updateHistoryCount(habitHistory);
+
+            LocalDate lastCompletedSlot = habitHistory.getLastCompleted();
+            _historyLastCompletedTextView.setText(Html.fromHtml(getString(
+                    R.string.text_habit_history_last_completed,
+                    (lastCompletedSlot != null ? lastCompletedSlot.toString("yyyy/MM/dd") : "none"))));
 
             HabitDetailsActivity.this.onResume();
         }
@@ -392,5 +424,21 @@ public class HabitDetailsActivity extends AppCompatActivity
             return new MPPointF(-(getWidth() / 2), 0);//-getHeight());
         }
 
+    }
+
+    /**
+     * Watcher for the days input in the history card
+     */
+    private class HistoryDaysInputWatcher implements TextWatcher {
+        @Override
+        public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
+
+        @Override
+        public void onTextChanged(CharSequence s, int i, int i1, int i2) {
+            _updateHistoryCount(_viewModel.getHabitHistory().getValue());
+        }
+
+        @Override
+        public void afterTextChanged(Editable editable) {}
     }
 }

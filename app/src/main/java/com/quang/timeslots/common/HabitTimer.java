@@ -90,9 +90,7 @@ public class HabitTimer {
         PendingIntent pendingIntent = PendingIntent.getActivity(app, 0, intent, 0);
 
         String channelID = app.getResources().getString(R.string.notification_channel_id);
-        String notificationBody = String.format(
-                app.getResources().getString(R.string.notification_body),
-                _runningHabit.getName());
+        String notificationBody = app.getResources().getString(R.string.notification_body, _runningHabit.getName());
         NotificationCompat.Builder notificationBuilder =
                 new NotificationCompat.Builder(app, channelID)
                         .setSmallIcon(R.drawable.icon_focus)
@@ -139,8 +137,7 @@ public class HabitTimer {
             AlertDialog dialog = new AlertDialog.Builder(_habitTimerListener.getActivity())
                     .create();
             dialog.setTitle(app.getString(R.string.title_slot_completed_dialog));
-            dialog.setMessage(
-                    String.format(app.getString(R.string.text_slot_completed), _runningHabit.getName()));
+            dialog.setMessage(app.getString(R.string.text_slot_completed, _runningHabit.getName()));
             dialog.setButton(
                     DialogInterface.BUTTON_NEGATIVE,
                     app.getString(R.string.button_dismiss),

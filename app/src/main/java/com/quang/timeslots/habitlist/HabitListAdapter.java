@@ -81,9 +81,7 @@ public class HabitListAdapter
             _runningHabitViewHolder = holder;
 
         holder.nameView.setText(habit.getName());
-        holder.detailsView.setText(String.format(
-                _resources.getString(R.string.text_habit_list_item_details),
-                habit.getSlotLength()));
+        holder.detailsView.setText(_resources.getString(R.string.text_habit_list_item_details, habit.getSlotLength()));
 
         holder.button.setVisibility(View.VISIBLE);
         if (habit.id == habitTimer.getRunningHabitId()) { // This is the running habit

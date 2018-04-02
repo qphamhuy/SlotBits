@@ -25,7 +25,7 @@ public class HabitHistory {
 
     private int _habitID;
     private List<DailyCount> _dailyCounts;
-    private int _totalCount;
+    private LocalDate _lastCompleted;
 
     /**
      * Constructor
@@ -34,7 +34,7 @@ public class HabitHistory {
     HabitHistory(int habitID, DateTime[] slots) {
         _habitID = habitID;
         _dailyCounts = new ArrayList<>();
-        _totalCount = slots.length;
+        _lastCompleted = (slots.length > 0 ? slots[slots.length - 1].toLocalDate() : null);
 
         //Populate history with DailyCounts generated from slots. If there's insufficient
         //data, add zero counts to have an array of seven days.
@@ -55,15 +55,33 @@ public class HabitHistory {
         }
     }
 
+    /**
+     * Get array of daily slot counts
+     * @return Array of DailyCount objects
+     */
     public List<DailyCount> getDailyCounts() {
         return _dailyCounts;
     }
 
-    public int getTotalCount() {
-        return _totalCount;
+    /**
+     * Get slot count over the last N days
+     * @param numDays - Last N days to get count for
+     * @return Int count
+     */
+    public int getCountInLastNDays(int numDays) {
+        int count = 0;
+        numDays = Math.min(numDays, _dailyCounts.size());
+        for (int i = 0; i < numDays; ++i) {
+            count += _dailyCounts.get(_dailyCounts.size() - i - 1).count;
+        }
+        return count;
     }
 
+    /**
+     * Get date of last completed slot
+     * @return Nullable LocalDate object
+     */
     public LocalDate getLastCompleted() {
-        return _dailyCounts.get(_dailyCounts.size() - 1).date;
+        return _lastCompleted;
     }
 }

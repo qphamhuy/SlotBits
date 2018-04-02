@@ -99,7 +99,7 @@ public class HabitListActivity extends AppCompatActivity
      */
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
-        menu.findItem(R.id.habit_devmode_button).setChecked(TimeSlotsApplication.getInstance().isDevMode);
+        menu.findItem(R.id.devmode_button).setChecked(TimeSlotsApplication.getInstance().isDevMode);
         return true;
     }
 
@@ -111,7 +111,7 @@ public class HabitListActivity extends AppCompatActivity
     @Override
     public boolean onOptionsItemSelected(MenuItem menuItem) {
         switch (menuItem.getItemId()) {
-            case R.id.habit_devmode_button:
+            case R.id.devmode_button:
                 boolean devMode = !TimeSlotsApplication.getInstance().isDevMode;
                 TimeSlotsApplication.getInstance().isDevMode = devMode;
                 menuItem.setChecked(devMode);
