@@ -13,10 +13,13 @@
     <string name="title_habit_status_card">Status</string>
     <string name="title_habit_progress_card">In progress</string>
     <string name="title_habit_history_card">History</string>
+    <string name="title_settings_sync_data">Sync data</string>
 
     <!-- Labels -->
     <string name="label_habit_edit_name">Habit\'s name</string>
     <string name="label_habit_edit_length">Slot length (mins)</string>
+    <string name="label_settings_dev_mode">Developer mode</string>
+    <string name="label_settings_data_file">Data file</string>
 
     <!-- Texts -->
     <string name="text_habit_list_item_details">Slot length: %1$d mins</string>
@@ -29,9 +32,7 @@
     <string name="text_slot_completed">Yay! You just completed a new slot for %1$s!</string>
 
     <!-- Buttons -->
-    <string name="button_signin">Sign in</string>
-    <string name="button_sync">Sync data</string>
-    <string name="button_devmode">Dev mode</string>
+    <string name="button_settings">Settings</string>
     <string name="button_cancel">Cancel</string>
     <string name="button_ok">OK</string>
     <string name="button_dismiss">Dismiss</string>
@@ -40,7 +41,15 @@
     <string name="button_edit">Edit</string>
     <string name="button_delete">Delete</string>
     <string name="button_repeat">Go again!</string>
+    <string name="button_create">Create</string>
+    <string name="button_create_file">Create new</string>
+    <string name="button_load_file">Load existing</string>
+    <string name="button_manual_sync">Manually sync</string>
 
     <string name="server_client_id">278376095480-2knviehcdg1h0djv5a7uhm8o1os9cdtv.apps.googleusercontent.com</string>
+    <string name="title_activity_settings">SettingsActivity</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>

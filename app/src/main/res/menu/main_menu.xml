@@ -2,14 +2,8 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/signin_button"
+        android:id="@+id/settings_button"
         android:orderInCategory="100"
-        android:title="@string/button_signin" />
-
-    <item
-        android:id="@+id/devmode_button"
-        android:orderInCategory="200"
-        android:title="@string/button_devmode"
-        android:checkable="true" />
+        android:title="Settings" />
 
 </menu>

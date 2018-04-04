@@ -20,3 +20,16 @@ Screens:
 Data:
     Habits: id - name - slot_length
     History: date - habit_id - slot_count
+
+
+
+Settings
+
+Sync data (logged in)
+  Account      -    qphamhuy@gmail.com   => click for dropdown to log out
+  File         -    timeslots_backup     => click for UI to pick a file in Drive
+  Last synced  -    March 26 2018
+  Manually back up                       => click to back up data to the file
+
+Sync data (logged out)
+  Log in
