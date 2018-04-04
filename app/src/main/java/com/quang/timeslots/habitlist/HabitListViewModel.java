@@ -41,10 +41,6 @@ public class HabitListViewModel extends ViewModel {
         new AddAsyncTask(_db).execute(habit);
     }
 
-    public void reorderHabits(List<Habit> habitsList) {
-        new ReorderHabitsAsyncTask(_db).execute(habitsList);
-    }
-
 
     //////////
 
@@ -58,27 +54,9 @@ public class HabitListViewModel extends ViewModel {
         AddAsyncTask(TimeSlotsDatabase db) {
             _db = db;
         }
-
         @Override
         public Void doInBackground(final Habit... habits) {
-            long newHabitId = _db.habitDAO().createHabit(habits[0]);
-            return null;
-        }
-    }
-
-    private static class ReorderHabitsAsyncTask extends AsyncTask<List<Habit>, Void, Void> {
-        TimeSlotsDatabase _db;
-
-        ReorderHabitsAsyncTask(TimeSlotsDatabase db) {
-            _db = db;
-        }
-
-        @Override
-        public Void doInBackground(final List<Habit>... habits) {
-            _db.habitDAO().deleteAllHabits();
-            for (Habit habit : habits[0])
-                habit.id = 0;
-            _db.habitDAO().createHabits(habits[0]);
+            _db.habitDAO().createHabit(habits[0]);
             return null;
         }
     }

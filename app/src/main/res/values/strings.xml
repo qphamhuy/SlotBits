@@ -13,19 +13,17 @@
     <string name="title_habit_status_card">Status</string>
     <string name="title_habit_progress_card">In progress</string>
     <string name="title_habit_history_card">History</string>
+    <string name="title_notification"></string>
 
     <!-- Labels -->
     <string name="label_habit_edit_name">Habit\'s name</string>
     <string name="label_habit_edit_length">Slot length (mins)</string>
 
     <!-- Texts -->
-    <string name="text_habit_list_item_details">Slot length: %d mins</string>
     <string name="text_habit_status_waiting">This task is waiting to be worked on.</string>
     <string name="text_habit_status_inprogress">In progress. Completing at </string>
     <string name="text_habit_history_total_count">Total number of completed slots: </string>
     <string name="text_habit_history_last_completed">Date last slot was completed: </string>
-    <string name="text_habit_delete">Are you sure you want to delete this habit?</string>
-    <string name="text_slot_completed">Yay! You just completed a new slot for %s!</string>
 
     <!-- Buttons -->
     <string name="button_devmode">Dev mode</string>
@@ -38,4 +36,7 @@
     <string name="button_delete">Delete</string>
     <string name="button_repeat">Go again!</string>
 
+    <!-- Messages -->
+    <string name="message_habit_delete">Are you sure you want to delete this habit?</string>
+    <string name="message_slot_completed">You just completed a new slot!</string>
 </resources>
