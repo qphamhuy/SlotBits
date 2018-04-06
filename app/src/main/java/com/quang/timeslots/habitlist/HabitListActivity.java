@@ -8,20 +8,24 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ListView;
 
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.quang.timeslots.R;
 import com.quang.timeslots.TimeSlotsApplication;
 import com.quang.timeslots.common.HabitEditDialogFragment;
 import com.quang.timeslots.common.HabitTimer;
 import com.quang.timeslots.db.Habit;
-import com.quang.timeslots.habitdetails.HabitDetailsActivity;
+import com.quang.timeslots.settings.SettingsActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,10 +34,12 @@ import java.util.List;
  * Main activity that shows a list of habits
  */
 public class HabitListActivity extends AppCompatActivity
-                                implements HabitEditDialogFragment.HabitEditDialogListener {
+        implements HabitEditDialogFragment.HabitEditDialogListener {
     private HabitListAdapter _habitListAdapter;
     private HabitListViewModel _viewModel;
-    private Observer<List<Habit>> _habitListObserver = new HabitListObserver();
+    private GoogleSignInClient _googleSignInClient;
+
+    private static int RC_SIGN_IN = 9001;
 
     /**
      * Callback for when the activity is created
@@ -44,18 +50,32 @@ public class HabitListActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.habit_list);
 
-        ListView habitListView = findViewById(R.id.habit_list);
-        _habitListAdapter = new HabitListAdapter(this, habitListView, new ArrayList<Habit>());
+        RecyclerView habitListView = findViewById(R.id.habit_list);
+        habitListView.setLayoutManager(new LinearLayoutManager(this));
+        _habitListAdapter = new HabitListAdapter(this, new ArrayList<Habit>());
         habitListView.setAdapter(_habitListAdapter);
-        habitListView.setOnItemClickListener(new HabitOnClickListener());
+        HabitListItemTouchHelperCallback callback = new HabitListItemTouchHelperCallback(_habitListAdapter);
+        (new ItemTouchHelper(callback)).attachToRecyclerView(habitListView);
 
         _viewModel = ViewModelProviders.of(this).get(HabitListViewModel.class);
-        _viewModel.getHabitList().observe(this, _habitListObserver);
+        _viewModel.getHabitList().observe(this, new Observer<List<Habit>>() {
+            @Override
+            public void onChanged(@Nullable List<Habit> habits) {
+                _habitListAdapter.setHabitList(habits);
+            }
+        });
 
         setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
 
         FloatingActionButton fab = findViewById(R.id.create_habit_button);
         fab.setOnClickListener(new FABOnClickListener());
+
+        //Initialize Google sign-in client
+//        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+//                .requestIdToken(getString(R.string.server_client_id))
+//                .requestEmail()
+//                .build();
+//        _googleSignInClient = GoogleSignIn.getClient(this, gso);
     }
 
     /**
@@ -88,17 +108,6 @@ public class HabitListActivity extends AppCompatActivity
     }
 
     /**
-     * Callback to prepare the action bar menu
-     * @param menu
-     * @return True
-     */
-    @Override
-    public boolean onPrepareOptionsMenu(Menu menu) {
-        menu.findItem(R.id.habit_devmode_button).setChecked(TimeSlotsApplication.getInstance().isDevMode);
-        return true;
-    }
-
-    /**
      * Callback to react to a button press on the action bar
      * @param menuItem - One of the menu items on the action bar
      * @return True
@@ -106,10 +115,9 @@ public class HabitListActivity extends AppCompatActivity
     @Override
     public boolean onOptionsItemSelected(MenuItem menuItem) {
         switch (menuItem.getItemId()) {
-            case R.id.habit_devmode_button:
-                boolean devMode = !TimeSlotsApplication.getInstance().isDevMode;
-                TimeSlotsApplication.getInstance().isDevMode = devMode;
-                menuItem.setChecked(devMode);
+            case R.id.settings_button:
+                Intent settingsIntent = new Intent(this, SettingsActivity.class);
+                startActivity(settingsIntent);
                 break;
             default:
                 return super.onOptionsItemSelected(menuItem);
@@ -118,32 +126,31 @@ public class HabitListActivity extends AppCompatActivity
         return true;
     }
 
+//    @Override
+//    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+//        super.onActivityResult(requestCode, resultCode, data);
+//
+//        if (requestCode == RC_SIGN_IN) {
+//            // [START get_id_token]
+//            // This task is always completed immediately, there is no need to attach an
+//            // asynchronous listener.
+////            Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
+////            handleSignInResult(task);
+//            // [END get_id_token]
+//        }
+//    }
+
+    /**
+     * React to a reordering of habits
+     * @param habits - List of habits in the new order
+     */
+    public void onHabitsReorder(List<Habit> habits) {
+        _viewModel.reorderHabits(habits);
+    }
+
 
     //////////
 
-
-    /**
-     * Observer of the list of habits for when new habits are added
-     */
-    private class HabitListObserver implements Observer<List<Habit>> {
-        @Override
-        public void onChanged(@Nullable List<Habit> habits) {
-            _habitListAdapter.clear();
-            _habitListAdapter.addAll(habits);
-        }
-    }
-
-    /**
-     * Listener that reacts to a click on a habit in the list
-     */
-    private class HabitOnClickListener implements AdapterView.OnItemClickListener {
-        @Override
-        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            Intent habitDetailsIntent = new Intent(HabitListActivity.this, HabitDetailsActivity.class);
-            habitDetailsIntent.putExtra("selectedHabit", (Habit) view.getTag());
-            startActivity(habitDetailsIntent);
-        }
-    }
 
     /**
      * Listener that reacts to a click on the add habit button
@@ -151,7 +158,7 @@ public class HabitListActivity extends AppCompatActivity
     private class FABOnClickListener implements View.OnClickListener {
         @Override
         public void onClick(View view) {
-            DialogFragment editDialog = HabitEditDialogFragment.newInstance(new Habit("",15));
+            DialogFragment editDialog = HabitEditDialogFragment.newInstance(new Habit("", 15));
             editDialog.show(getFragmentManager(), "HabitEditDialogFragment");
         }
     }

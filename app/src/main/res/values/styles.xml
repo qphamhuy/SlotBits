@@ -26,7 +26,7 @@
         <item name="android:textSize">@dimen/title_font_size</item>
         <!--<item name="android:layout_marginBottom">@dimen/medium_margin</item>-->
     </style>
-    
+
     <style name="TimeSlotsTheme.SubtleText">
         <item name="android:textColor">@color/textDisabled</item>
         <item name="android:textSize">@dimen/subtitle_font_size</item>
@@ -36,6 +36,17 @@
         <item name="android:background">@null</item>
         <item name="android:scaleType">fitXY</item>
         <item name="android:layout_centerVertical">true</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:minHeight">0dp</item>
+        <item name="android:paddingTop">0dp</item>
+        <item name="android:paddingBottom">0dp</item>
+    </style>
+
+    <style name="TimeSlotsTheme.Divider">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">2dp</item>
+        <item name="android:background">@color/lightBackground</item>
     </style>
 
     <style name="TimeSlotsTheme.HabitCardView" parent="CardView">
@@ -58,11 +69,11 @@
     </style>
 
     <style name="TimeSlotsTheme.HabitCardView.Action" parent="TimeSlotsTheme.TransparentButton">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:minWidth">0dp</item>
-        <item name="android:minHeight">0dp</item>
         <item name="android:paddingLeft">@dimen/large_margin</item>
     </style>
+
+    <style name="TimeSlotsTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="TimeSlotsTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
 </resources>

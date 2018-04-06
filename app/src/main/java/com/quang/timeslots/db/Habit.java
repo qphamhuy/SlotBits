@@ -13,6 +13,9 @@ public class Habit implements Parcelable {
     @ColumnInfo(name = "id")
     public int id;
 
+    @ColumnInfo(name = "order_number")
+    public int orderNumber;
+
     @ColumnInfo(name = "name")
     private String _name;
 
@@ -31,10 +34,6 @@ public class Habit implements Parcelable {
     public int getSlotLength() {
         return _slotLength;
     }
-
-    public void setName(String name) { _name = name; }
-
-    public void setSlotLength(int length) { _slotLength = length; }
 
 
     // Parcel overrides

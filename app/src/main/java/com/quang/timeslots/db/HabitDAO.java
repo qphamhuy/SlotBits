@@ -12,14 +12,17 @@ import java.util.List;
 @Dao
 public interface HabitDAO {
     @Insert
-    public long createHabit(Habit habit);
+    long createHabit(Habit habit);
 
     @Update
-    public void updateHabit(Habit habit);
+    void updateHabit(Habit habit);
 
     @Delete
-    public void deleteHabit(Habit habit);
+    void deleteHabit(Habit habit);
 
-    @Query("SELECT * FROM habits")
-    public LiveData<List<Habit>> getAllHabits();
+    @Query("SELECT MAX(order_number) FROM habits")
+    int getMaxOrderNumber();
+
+    @Query("SELECT * FROM habits ORDER BY order_number")
+    LiveData<List<Habit>> getAllHabits();
 }
