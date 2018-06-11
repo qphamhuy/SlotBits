@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <include
+        layout="@layout/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="@dimen/medium_margin">
+
+            <!-- Developer mode section -->
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="@dimen/small_margin">
+
+                <TextView
+                    android:id="@+id/settings_devmode_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:text="@string/label_settings_dev_mode" />
+
+                <CheckBox
+                    android:id="@+id/settings_devmode_checkbox"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBaseline="@id/settings_devmode_label"
+                    android:layout_alignParentEnd="true" />
+            </RelativeLayout>
+
+            <View style="@style/TimeSlotsTheme.Divider" />
+
+            <!-- Data sync section -->
+            <TextView
+                android:id="@+id/settings_sync_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="@dimen/small_margin"
+                android:paddingTop="@dimen/small_margin"
+                android:text="@string/title_settings_sync_data"
+                android:textStyle="bold" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="@dimen/small_margin">
+
+                <TextView
+                    android:id="@+id/settings_file_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:text="@string/label_settings_data_file" />
+
+                <Button
+                    android:id="@+id/settings_file_create_button"
+                    style="@style/TimeSlotsTheme.TransparentButton"
+                    android:layout_alignBaseline="@id/settings_file_label"
+                    android:layout_toStartOf="@id/settings_file_browse_button"
+                    android:onClick="onNewDataFileClick"
+                    android:text="@string/button_create_file" />
+
+                <Button
+                    android:id="@+id/settings_file_browse_button"
+                    style="@style/TimeSlotsTheme.TransparentButton"
+                    android:layout_alignBaseline="@id/settings_file_label"
+                    android:layout_alignParentEnd="true"
+                    android:onClick="onLoadDataFileClick"
+                    android:text="@string/button_load_file" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/settings_manual_sync_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_toStartOf="@id/settings_manual_sync_button"
+                    android:text="Last synced: 04/04/18 01:35PM. Now I'm testing a text that is longer than what should fit in the screen." />
+
+                <Button
+                    android:id="@+id/settings_manual_sync_button"
+                    style="@style/TimeSlotsTheme.TransparentButton"
+                    android:layout_alignBaseline="@id/settings_manual_sync_label"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginLeft="@dimen/medium_margin"
+                    android:text="@string/button_manual_sync" />
+            </RelativeLayout>
+        </LinearLayout>
+
+        <!-- Overlay progress bar for loading/writing data file -->
+        <FrameLayout
+            android:id="@+id/settings_progress_bar_holder"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:alpha="0.4"
+            android:animateLayoutChanges="true"
+            android:background="#000"
+            android:visibility="gone">
+
+            <ProgressBar
+                style="?android:attr/progressBarStyleLarge"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:indeterminate="true" />
+        </FrameLayout>
+    </RelativeLayout>
+
+</LinearLayout>
+

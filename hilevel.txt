@@ -20,3 +20,26 @@ Screens:
 Data:
     Habits: id - name - slot_length
     History: date - habit_id - slot_count
+
+
+
+Settings
+
+Back up data 
+  Data file      New file - Load file
+  Back up to file
+  Last backed up - Sep 15 2017
+
+New data file:
+  Create data in file system
+  Back up to file (see below)
+
+Existing data file:
+  JSON read from file
+  JSON parsed into data objects
+  Data objects written to db
+  Back up to file (see below)
+  
+Back up to file:
+  Db serialized to JSON
+  JSON written to file

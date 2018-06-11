@@ -18,7 +18,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="@string/label_habit_edit_name"
-        android:layout_marginLeft="@dimen/small_margin"
+        android:inputType="text"
+        android:maxLength="100"
+        android:maxLines="1"
+        android:layout_marginStart="@dimen/small_margin"
         android:layout_marginBottom="@dimen/small_margin" />
 
     <com.gregacucnik.EditableSeekBar

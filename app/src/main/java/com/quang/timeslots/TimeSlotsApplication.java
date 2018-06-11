@@ -3,6 +3,7 @@ package com.quang.timeslots;
 import android.app.Application;
 import android.arch.persistence.room.Room;
 
+import com.quang.timeslots.common.FileIO;
 import com.quang.timeslots.common.HabitTimer;
 import com.quang.timeslots.db.TimeSlotsDatabase;
 
@@ -21,7 +22,9 @@ public class TimeSlotsApplication extends Application {
         _instance = this;
         _db = Room.databaseBuilder(getApplicationContext(), TimeSlotsDatabase.class, "TimeSlots")
                 .build();
+
         HabitTimer.getInstance();
+        FileIO.getInstance();
 
         JodaTimeAndroid.init(this);
     }
