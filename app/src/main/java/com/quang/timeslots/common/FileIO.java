@@ -226,6 +226,13 @@ public class FileIO {
 
             return null;
         }
+
+        @Override
+        public void onPostExecute(Void results) {
+            if (_listener != null) {
+                _listener.onFileReadComplete();
+            }
+        }
     }
 
 }

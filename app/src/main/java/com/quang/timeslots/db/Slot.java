@@ -100,4 +100,14 @@ public class Slot {
         }
         return false;
     }
+
+    /**
+     * Return int hash code of this slot; for storing in hash sets
+     * @return
+     */
+    @Override
+    public int hashCode() {
+        String hashCodeStr = String.format("%d%s", _habitId, _dateCompleted.toString("yyyyMMdd"));
+        return Integer.parseInt(hashCodeStr);
+    }
 }

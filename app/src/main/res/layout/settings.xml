@@ -47,7 +47,7 @@
                 android:id="@+id/settings_sync_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingBottom="@dimen/small_margin"
+                android:paddingBottom="@dimen/medium_margin"
                 android:paddingTop="@dimen/small_margin"
                 android:text="@string/title_settings_sync_data"
                 android:textStyle="bold" />
@@ -55,7 +55,7 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingBottom="@dimen/small_margin">
+                android:paddingBottom="@dimen/medium_margin">
 
                 <TextView
                     android:id="@+id/settings_file_label"
@@ -64,21 +64,15 @@
                     android:layout_alignParentStart="true"
                     android:text="@string/label_settings_data_file" />
 
-                <Button
-                    android:id="@+id/settings_file_create_button"
-                    style="@style/TimeSlotsTheme.TransparentButton"
-                    android:layout_alignBaseline="@id/settings_file_label"
-                    android:layout_toStartOf="@id/settings_file_browse_button"
-                    android:onClick="onNewDataFileClick"
-                    android:text="@string/button_create_file" />
-
-                <Button
-                    android:id="@+id/settings_file_browse_button"
-                    style="@style/TimeSlotsTheme.TransparentButton"
+                <TextView
+                    android:id="@+id/settings_selected_file_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/textColorPrimary"
                     android:layout_alignBaseline="@id/settings_file_label"
                     android:layout_alignParentEnd="true"
-                    android:onClick="onLoadDataFileClick"
-                    android:text="@string/button_load_file" />
+                    android:onClick="showDataFileMenu" />
+
             </RelativeLayout>
 
             <RelativeLayout

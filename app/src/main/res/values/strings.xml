@@ -32,6 +32,8 @@
     <string name="text_habit_delete">Are you sure you want to delete this habit?</string>
     <string name="text_slot_completed">Yay! You just completed a new slot for %1$s!</string>
     <string name="text_file_name">File name</string>
+    <string name="text_selected_data_file">Selected file: %1$s</string>
+    <string name="text_none">none</string>
 
     <!-- Buttons -->
     <string name="button_settings">Settings</string>
@@ -46,6 +48,7 @@
     <string name="button_create">Create</string>
     <string name="button_create_file">Create new</string>
     <string name="button_load_file">Load existing</string>
+    <string name="button_disconnect_file">Disconnect</string>
     <string name="button_manual_sync">Manually sync</string>
 
     <!-- Log messages -->
@@ -56,4 +59,9 @@
     <string name="log_error_file_to_data">Reading data from file failed: %1$s</string>
     <string name="log_error_data_to_file">Writing data to file failed: %1$s</string>
     <string name="log_error_parse_data">Parsing data file failed: %1$s</string>
+
+    <!-- Shared preferences -->
+    <string name="shared_preferences_id">com.quang.timeslots.sharedpreferences</string>
+    <string name="shared_preferences_key_data_file_name">DATA_FILE_NAME</string>
+    <string name="shared_preferences_key_last_sync_date">LAST_SYNC_DATE</string>
 </resources>

@@ -1,0 +1,18 @@
+<menu
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/create_data_file_button"
+        android:orderInCategory="200"
+        android:title="@string/button_create_file" />
+
+    <item
+        android:id="@+id/load_data_file_button"
+        android:orderInCategory="300"
+        android:title="@string/button_load_file" />
+
+    <item
+        android:id="@+id/disconnect_data_file_button"
+        android:orderInCategory="400"
+        android:title="@string/button_disconnect_file" />
+</menu>

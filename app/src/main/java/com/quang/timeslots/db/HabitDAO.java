@@ -6,32 +6,44 @@ import android.arch.persistence.room.Delete;
 import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.Query;
 import android.arch.persistence.room.Update;
+import android.net.Uri;
+
+import com.quang.timeslots.TimeSlotsApplication;
+import com.quang.timeslots.common.FileIO;
 
 import java.util.List;
 
 @Dao
-public interface HabitDAO {
-    @Insert
-    long createHabit(Habit habit);
+public abstract class HabitDAO {
+    public long createHabit(Habit habit) {
+        long id = createHabitSql(habit);
+        Uri dataFileUri = TimeSlotsApplication.getInstance().getDataFileUri();
+        if (dataFileUri != null)
+            FileIO.getInstance().writeToFile(dataFileUri, null);
+        return id;
+    }
 
     @Insert
-    long[] createHabits(List<Habit> habits);
+    public abstract long createHabitSql(Habit habit);
+
+    @Insert
+    public abstract long[] createHabits(List<Habit> habits);
 
     @Update
-    void updateHabit(Habit habit);
+    public abstract void updateHabit(Habit habit);
 
     @Delete
-    void deleteHabit(Habit habit);
+    public abstract void deleteHabit(Habit habit);
 
     @Query("DELETE FROM habits")
-    void deleteAllHabits();
+    public abstract void deleteAllHabits();
 
     @Query("SELECT MAX(order_number) FROM habits")
-    int getMaxOrderNumber();
+    public abstract int getMaxOrderNumber();
 
     @Query("SELECT * FROM habits ORDER BY order_number")
-    LiveData<List<Habit>> getAllHabits();
+    public abstract LiveData<List<Habit>> getAllHabits();
 
     @Query("SELECT * FROM habits ORDER BY order_number")
-    List<Habit> getAllHabitsSync();
+    public abstract List<Habit> getAllHabitsSync();
 }
