@@ -137,9 +137,7 @@ public class HabitListAdapter
     @Override
     public void timerUpdate(long remainingSecs) {
         if (_runningHabitViewHolder != null) {
-            long mins = remainingSecs / 60;
-            long secs = remainingSecs % 60;
-            _runningHabitViewHolder.countdownView.setText(String.format("%dm%ds", mins, secs));
+            _runningHabitViewHolder.countdownView.setText(HabitTimer.formatRemainingSecs(remainingSecs));
         }
     }
 

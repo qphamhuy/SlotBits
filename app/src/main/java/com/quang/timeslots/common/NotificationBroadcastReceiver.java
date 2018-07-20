@@ -3,7 +3,6 @@ package com.quang.timeslots.common;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Vibrator;
 
 import com.quang.timeslots.TimeSlotsApplication;
 import com.quang.timeslots.habitdetails.HabitDetailsActivity;
@@ -15,6 +14,7 @@ public class NotificationBroadcastReceiver extends BroadcastReceiver {
         app.cancelVibrator();
         Intent activityIntent = new Intent(app, HabitDetailsActivity.class);
         activityIntent.putExtra("selectedHabit", intent.getParcelableExtra("selectedHabit"));
+        activityIntent.putExtra("showCompletionDialog", true);
         app.startActivity(activityIntent);
     }
 }

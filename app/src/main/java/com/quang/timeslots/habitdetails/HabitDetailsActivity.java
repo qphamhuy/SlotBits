@@ -5,6 +5,7 @@ import android.app.DialogFragment;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -38,6 +39,7 @@ import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.utils.MPPointF;
 import com.github.mikephil.charting.utils.ViewPortHandler;
 import com.quang.timeslots.R;
+import com.quang.timeslots.TimeSlotsApplication;
 import com.quang.timeslots.common.HabitEditDialogFragment;
 import com.quang.timeslots.common.HabitTimer;
 import com.quang.timeslots.common.HabitTimerListener;
@@ -130,6 +132,15 @@ public class HabitDetailsActivity extends AppCompatActivity
         _updateViewsWithHabitStatus();
     }
 
+    @Override
+    public void onNewIntent(Intent intent) {
+        if (intent.getBooleanExtra("showCompletionDialog", false)) {
+            TimeSlotsApplication app = TimeSlotsApplication.getInstance();
+            app.onActivityResumed(this);
+            app.showCompletionDialog(_selectedHabit);
+        }
+    }
+
     /**
      * Callback to create the action bar menu
      * @param menu
@@ -193,9 +204,7 @@ public class HabitDetailsActivity extends AppCompatActivity
     @Override
     public void timerUpdate(long remainingSecs) {
         TextView countdownView = this.findViewById(R.id.habit_status_remaining_time);
-        long mins = remainingSecs / 60;
-        long secs = remainingSecs % 60;
-        countdownView.setText(String.format("%dm%ds", mins, secs));
+        countdownView.setText(HabitTimer.formatRemainingSecs(remainingSecs));
     }
 
     /**

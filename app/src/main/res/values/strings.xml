@@ -2,10 +2,9 @@
     <string name="app_name">TimeSlots</string>
 
     <!-- Notification -->
-    <string name="notification_channel_id">timeslots_channel_001</string>
-    <string name="notification_channel_description">TimeSlots notification</string>
-    <string name="notification_title">Task completed!</string>
-    <string name="notification_body">+1 slot for %1$s.</string>
+    <string name="notification_ongoing_title">%1$s is running</string>
+    <string name="notification_completion_title">Slot completed!</string>
+    <string name="notification_completion_body">+1 slot for %1$s.</string>
 
     <!-- Titles -->
     <string name="title_activity_habit_details">HabitDetailsActivity</string>
@@ -59,9 +58,5 @@
     <string name="log_error_file_to_data">Reading data from file failed: %1$s</string>
     <string name="log_error_data_to_file">Writing data to file failed: %1$s</string>
     <string name="log_error_parse_data">Parsing data file failed: %1$s</string>
-
-    <!-- Shared preferences -->
-    <string name="shared_preferences_id">com.quang.timeslots.sharedpreferences</string>
-    <string name="shared_preferences_key_data_file_name">DATA_FILE_NAME</string>
-    <string name="shared_preferences_key_last_sync_date">LAST_SYNC_DATE</string>
 </resources>
+

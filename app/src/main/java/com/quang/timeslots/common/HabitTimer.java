@@ -1,9 +1,8 @@
 package com.quang.timeslots.common;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.CountDownTimer;
+import android.support.v4.app.NotificationCompat;
 
 import com.quang.timeslots.R;
 import com.quang.timeslots.TimeSlotsApplication;
@@ -16,6 +15,8 @@ import org.joda.time.DateTime;
  * Global singleton that handles the countdown timer for a running habit
  */
 public class HabitTimer {
+    private final static int NOTIFICATION_ID = 112;
+
     private Habit _runningHabit = null;
     private HabitTimerListener _habitTimerListener;
     private CountDownTimer _countdownTimer;
@@ -29,6 +30,17 @@ public class HabitTimer {
         if (_instance == null)
             _instance = new HabitTimer();
         return _instance;
+    }
+
+    /**
+     * Format the remaining seconds as ##m##s
+     * @param remainingSecs
+     * @return
+     */
+    public static String formatRemainingSecs(long remainingSecs) {
+        long mins = remainingSecs / 60;
+        long secs = remainingSecs % 60;
+        return String.format("%dm%ds", mins, secs);
     }
 
     /**
@@ -65,6 +77,15 @@ public class HabitTimer {
             _countdownTimer.cancel();
             _countdownTimer = null;
         }
+        TimeSlotsApplication.getInstance().getNotificationManager().cancel(NOTIFICATION_ID);
+    }
+
+    /**
+     * Restart countdown for the same habit that just finished
+     */
+    public void restartCountdown() {
+        if (_habitTimerListener != null)
+            _habitTimerListener.onTimerRestart();
     }
 
 
@@ -75,49 +96,42 @@ public class HabitTimer {
      * Custom implementation of CountDownTimer
      */
     private class HabitCountdown extends CountDownTimer {
+        private final TimeSlotsApplication _app = TimeSlotsApplication.getInstance();
+        private NotificationCompat.Builder _notificationBuilder;
+
+
         HabitCountdown(long millisInFuture) {
             super(millisInFuture, 1000);
+
+            _notificationBuilder = new NotificationCompat.Builder(_app, TimeSlotsApplication.NOTIFICATION_CHANNEL_ID)
+                .setSmallIcon(R.drawable.icon_focus)
+                .setContentTitle(_app.getResources().getString(R.string.notification_ongoing_title, _runningHabit.getName()))
+                .setPriority(NotificationCompat.PRIORITY_LOW)
+                .setOngoing(true)
+                .setVibrate(new long[]{0, 0})
+                .setSound(null)
+                .setOnlyAlertOnce(true);
         }
 
         @Override
         public void onTick(long millisRemaining) {
             if (_habitTimerListener != null)
                 _habitTimerListener.timerUpdate(millisRemaining/1000);
+            _updateTimerNotification(millisRemaining/1000);
         }
 
         @Override
         public void onFinish() {
-            final TimeSlotsApplication app = TimeSlotsApplication.getInstance();
-
-            //Show popup dialog
-            AlertDialog dialog = new AlertDialog.Builder(_habitTimerListener.getActivity())
-                    .create();
-            dialog.setTitle(app.getString(R.string.title_slot_completed_dialog));
-            dialog.setMessage(app.getString(R.string.text_slot_completed, _runningHabit.getName()));
-            dialog.setButton(
-                    DialogInterface.BUTTON_NEGATIVE,
-                    app.getString(R.string.button_dismiss),
-                    new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            app.cancelVibrator();
-                        }
-                    });
-            dialog.setButton(
-                    DialogInterface.BUTTON_POSITIVE,
-                    app.getString(R.string.button_repeat),
-                    new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            _habitTimerListener.onTimerRestart();
-                        }
-                    });
-            dialog.show();
-
-            app.showCompletionNotification(_runningHabit);
-            app.startVibrator();
-            new TimerFinishAsyncTask().execute(_runningHabit.id);
+            _app.showCompletionDialog(_runningHabit);
+            _app.showCompletionNotification(_runningHabit);
+            _app.startVibrator();
+            new TimerFinishAsyncTask().execute(_runningHabit.id); // Write slot to DB
             stopCountdown();
+        }
+
+        private void _updateTimerNotification(long remainingSecs) {
+            _notificationBuilder.setContentText(HabitTimer.formatRemainingSecs(remainingSecs));
+            _app.getNotificationManager().notify(NOTIFICATION_ID, _notificationBuilder.build());
         }
     }
 
